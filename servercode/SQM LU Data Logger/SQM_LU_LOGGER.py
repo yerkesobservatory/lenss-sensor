@@ -14,8 +14,8 @@ now = datetime.now()
 log = open('./log_' + now.strftime('%Y-%m-%d') + '.txt', 'a')
 
 # Automatically selects port syntax based on OS
-# IMPORTANT!!! - Missing ability to change ports depending on machine
-# and sensor!
+# IMPORTANT!!! - Assumes no other devices plugged in with 'USB Serial'
+# string and assums similar model number.
 def port():
     if str(platform.system()) == 'Windows':
         for p in ports:
@@ -23,7 +23,7 @@ def port():
                 q = str(p)
                 return(q[:4])
     else:
-        return  '/dev/ttyS4' #'/dev/tty.usbserial-A5055IX5A' # /dev/ttyS(Port Number) for WSL
+        return  '/dev/tty.usbserial-A5055IX5A' # /dev/ttyS(Port Number) for WSL
 
 # Main read function. Sends a string to the defined port and
 # prints the resulting output to a file "log.txt" and the terminal.
@@ -41,7 +41,6 @@ def serialread():
     ser.flush()
     print(ser.readline())
     log.write(str(ser.readline()) + "\n")
-    #log.close()
     ser.close()
 
 # Runs serialread() function every second.
