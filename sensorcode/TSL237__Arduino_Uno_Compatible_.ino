@@ -4,6 +4,7 @@ unsigned long t = 0;
 unsigned long last;
 int DigPin = 2;
 int IntPin = 0;
+const int TempSensorPin = 0; //the analog pin the TMP36's Vout (sense) pin is connected to
 
 void irq1()
 {
@@ -37,10 +38,21 @@ void loop()
     unsigned long hz = t - oldcnt;
     Serial.print("FREQ: "); 
     Serial.print(hz);
-    Serial.print("\t = "); 
+    Serial.print(" = "); 
     Serial.print((hz+50)/100);  // +50 == rounding last digit
-    Serial.println(" mW/m2");
+    Serial.print(" mW/m2; ");
     oldcnt = t;
+
+    int reading = analogRead(TempSensorPin);
+    float voltage = reading * 5.0;
+    voltage /= 1024.0;
+    Serial.print("\t");
+    Serial.print(voltage); Serial.print(" volts; ");
+    float tempC = (voltage - 0.5) * 100;
+    Serial.print(tempC); Serial.print(" degrees C; ");
+    float tempF = 9/5 * tempC + 32;
+    Serial.print(tempF); Serial.println(" degrees F");
+    
     if (millis() % 3600000 >= 0)
     {
       cnt = 0;
