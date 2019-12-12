@@ -7,7 +7,6 @@
 // pin assignments
 
 volatile unsigned long cnt = 0;
-unsigned long oldcnt = 0;
 unsigned long t = 0;
 unsigned long last;
 int DigPin = 2;
@@ -49,13 +48,12 @@ void loop() {
     if (millis() - last >= 1000) {
       last = millis();
       t = cnt;
-      unsigned long hz = t - oldcnt;
+      unsigned long hz = t;
       Serial.print("FREQ: "); 
       Serial.print(hz);
       Serial.print(" = "); 
       Serial.print((hz+50)/100);  // +50 == rounding last digit
       Serial.print(" mW/m2; ");
-      oldcnt = t;
 
       int reading = analogRead(TempSensorPin);
       float voltage = reading * 5.0;
@@ -67,11 +65,8 @@ void loop() {
       float tempF = 9/5 * tempC + 32;
       Serial.print(tempF); Serial.println(" degrees F");
     
-      if (millis() % 3600000 >= 0) {
-        cnt = 0;
-        oldcnt = 0;
-      }
-    }
+      cnt = 0;
+
   } else {
     // not sure yet
   }
