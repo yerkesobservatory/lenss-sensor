@@ -62,7 +62,7 @@ void loop() {
       Serial.print(voltage); Serial.print(" volts; ");
       float tempC = (voltage - 0.5) * 100;
       Serial.print(tempC); Serial.print(" degrees C; ");
-      float tempF = 9/5 * tempC + 32;
+      float tempF = tempC * 1.8 + 32;
       Serial.print(tempF); Serial.println(" degrees F");
     
       cnt = 0;
