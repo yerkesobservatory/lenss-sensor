@@ -46,6 +46,7 @@ void setup() {
 ///////////////////////////////////////////////////////////////////
 void loop() {
   if (Serial.available() <= 0) {
+    inByte = Serial.read();
     if (millis() - last >= 1000) {
       last = millis();
       t = cnt;
@@ -66,6 +67,11 @@ void loop() {
       Serial.print(tempC); Serial.print(" degrees C; ");
       float tempF = 9/5 * tempC + 32;
       Serial.print(tempF); Serial.println(" degrees F");
+
+      //Write data to serial port
+      Serial.write(voltage);
+      Serial.write(tempC);
+      Serial.write(tempF);
     
       if (millis() % 3600000 >= 0) {
         cnt = 0;
