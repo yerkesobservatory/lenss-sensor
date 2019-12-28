@@ -15,7 +15,7 @@ log = open('./log_' + now.strftime('%Y-%m-%d') + '.txt', 'a')
 
 # Automatically selects port syntax based on OS
 # IMPORTANT!!! - Assumes no other devices plugged in with 'USB Serial'
-# string and assums similar model number.
+# string and assumes similar model number.
 def port():
     if str(platform.system()) == 'Windows':
         for p in ports:
