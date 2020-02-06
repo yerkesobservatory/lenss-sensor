@@ -43,6 +43,16 @@ def serialread(config):
     log.write(read_fmtd)
     log.close()
 
+def serialread_alt(config):
+    ser  =  serial . Serial ( port(config), 9600, timeout=5)
+    read_ser=ser.readline()
+    ser.close()
+    read_fmtd = read_ser.decode("utf-8")
+    print(read_fmtd)
+    log = open('TestlogA2.txt', 'a')
+    log.write(read_fmtd)
+    log.close()
+
 while True:
 
     serialread(config)
