@@ -33,8 +33,8 @@ config = configparser.ConfigParser()
 config.read(Config_FilePathName)
 
 now = datetime.now()
-log = open('./sqmlu_' + now.strftime('%Y-%m-%d') + '.txt', 'a')
-#log = open(now.strftime(config['sqmdatalogger']['outfilename']),'at')
+#log = open('./sqmlu_' + now.strftime('%Y-%m-%d') + '.txt', 'a')
+log = open(now.strftime(config['sqmludatalogger']['outfilename']),'at')
 
 # Automatically selects port syntax based on OS
 # IMPORTANT!!! - Assumes no other devices plugged in with 'USB Serial'
