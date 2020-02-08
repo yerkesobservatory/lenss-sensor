@@ -30,12 +30,14 @@ def serialread(config):
     """ Read the serial value from the arduino and writes
         it to the file.
     """
+    now = datetime.now()
     # Read value from Arduino
-    read_ser=now.strftime('%H:%M:%S')+","+ser.readline()
+    read_ser=ser.readline()
+    print(repr(read_ser))
     read_fmtd = read_ser.decode("utf-8")
+    read_timed = now.strftime('%H:%M:%S,')+read_fmtd
     print(read_fmtd)
     # Make filename
-    now = datetime.now()
     fname = now.strftime(config['arddatalogger']['outfilename'])
     # Save to file
     log = open(fname, 'at')
@@ -54,14 +56,12 @@ Config_FilePathName = sys.argv[1]
 config = configparser.ConfigParser()
 config.read(Config_FilePathName)
 
-
 now = datetime.now()
 print(config['arddatalogger']['arduinoport'])
 
-
 ser  =  serial . Serial (
         port=getardport(config),\
-        baudrate=9600,\
+        baudrate=115200,\
         parity=serial.PARITY_NONE,\
         stopbits=serial.STOPBITS_ONE,\
         bytesize=serial.EIGHTBITS,\
