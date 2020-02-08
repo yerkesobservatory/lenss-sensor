@@ -28,25 +28,16 @@ def port(config):
     except:
         exit(1)
         
-def serialread(config):
-    ser  =  serial . Serial (
+ser  =  serial . Serial (
         port=port(config),\
         baudrate=9600,\
         parity=serial.PARITY_NONE,\
         stopbits=serial.STOPBITS_ONE,\
         bytesize=serial.EIGHTBITS,\
-            timeout=1)
-    read_ser=ser.readline()
-    read_fmtd = read_ser.decode("utf-8")
-    print(read_fmtd)
-    log = open('TestlogA2.txt', 'a')
-    log.write(read_fmtd)
-    log.close()
-
-def serialread_alt(config):
-    ser  =  serial . Serial ( port(config), 9600, timeout=5)
-    read_ser=ser.readline()
-    ser.close()
+            timeout=5)
+        
+def serialread(config):
+    read_ser=now.strftime(%H:%M:%S)+","+ser.readline()
     read_fmtd = read_ser.decode("utf-8")
     print(read_fmtd)
     log = open('TestlogA2.txt', 'a')
