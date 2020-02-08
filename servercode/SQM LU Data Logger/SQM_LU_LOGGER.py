@@ -66,11 +66,12 @@ def serialread(config):
         bytesize=serial.EIGHTBITS,\
             timeout=1)
     print("connected to: " + ser.portstr)
-    log.write("connected to: " + str(ser.portstr) + "\n")
+    logging.info('Connected to:' + str(ser.portstr))
     ser.write(str.encode("rx\n"))
     ser.flush()
     print(ser.readline())
     log.write(str(ser.readline()) + "\n")
+    logging.info('Read data line')
     ser.close()
 
 # Runs serialread() function every second.
