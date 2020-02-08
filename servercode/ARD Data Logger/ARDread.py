@@ -1,3 +1,13 @@
+"""
+LENSS ARDUINO Read Program
+==========================
+
+This program reads data from the Arduino that
+is connected to the TSL237 sensor.
+
+"""
+
+### Imports / Setup
 import serial
 import RPi.GPIO as GPIO
 import time
@@ -7,7 +17,34 @@ import configparser
 import  os
 import sys
 
-GPIO.setmode(GPIO.BOARD)
+### Function Definitions
+def getardport(config):
+    """ Returns the port string for the arduino
+    """
+    try:
+        return config['arddatalogger']['arduinoport']
+    except:
+        exit(1)
+        
+def serialread(config):
+    """ Read the serial value from the arduino and writes
+        it to the file.
+    """
+    now = datetime.now()
+    # Read value from Arduino
+    read_ser=ser.readline()
+    print(repr(read_ser))
+    read_fmtd = read_ser.decode("utf-8")
+    read_timed = now.strftime('%H:%M:%S,')+read_fmtd
+    print(read_fmtd)
+    # Make filename
+    fname = now.strftime(config['arddatalogger']['outfilename'])
+    # Save to file
+    log = open(fname, 'at')
+    log.write(read_timed)
+    log.close()
+
+### Main program
 
 if len(sys.argv) < 2:
     print('WARNING: Must give filepathname to valid config file')
@@ -19,40 +56,17 @@ Config_FilePathName = sys.argv[1]
 config = configparser.ConfigParser()
 config.read(Config_FilePathName)
 
-
 now = datetime.now()
 print(config['arddatalogger']['arduinoport'])
-def port(config):
-    try:
-        return config['arddatalogger']['arduinoport']
-    except:
-        exit(1)
-        
-def serialread(config):
-    ser  =  serial . Serial (
-        port=port(config),\
-        baudrate=9600,\
+
+ser  =  serial . Serial (
+        port=getardport(config),\
+        baudrate=115200,\
         parity=serial.PARITY_NONE,\
         stopbits=serial.STOPBITS_ONE,\
         bytesize=serial.EIGHTBITS,\
-            timeout=1)
-    read_ser=ser.readline()
-    read_fmtd = read_ser.decode("utf-8")
-    print(read_fmtd)
-    log = open('TestlogA2.txt', 'a')
-    log.write(read_fmtd)
-    log.close()
-
-def serialread_alt(config):
-    ser  =  serial . Serial ( port(config), 9600, timeout=5)
-    read_ser=ser.readline()
-    ser.close()
-    read_fmtd = read_ser.decode("utf-8")
-    print(read_fmtd)
-    log = open('TestlogA2.txt', 'a')
-    log.write(read_fmtd)
-    log.close()
-
+            timeout=5)
+        
 while True:
 
     serialread(config)

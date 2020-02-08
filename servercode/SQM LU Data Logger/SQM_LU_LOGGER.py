@@ -20,6 +20,7 @@ import configparser
 import time
 import os
 import sys
+import logging
 
 # Get config file name from argument
 if len(sys.argv) < 2:
@@ -33,8 +34,10 @@ config = configparser.ConfigParser()
 config.read(Config_FilePathName)
 
 now = datetime.now()
-log = open('./sqmlu_' + now.strftime('%Y-%m-%d') + '.txt', 'a')
-#log = open(now.strftime(config['sqmdatalogger']['outfilename']),'at')
+#log = open('./sqmlu_' + now.strftime('%Y-%m-%d') + '.txt', 'a')
+log = open(now.strftime(config['sqmludatalogger']['outfilename']),'at')
+
+logging.basicConfig(filename=now.strftime(config['logging']['logfile']),level=logging.DEBUG)
 
 # Automatically selects port syntax based on OS
 # IMPORTANT!!! - Assumes no other devices plugged in with 'USB Serial'
@@ -63,11 +66,12 @@ def serialread(config):
         bytesize=serial.EIGHTBITS,\
             timeout=1)
     print("connected to: " + ser.portstr)
-    log.write("connected to: " + str(ser.portstr) + "\n")
+    logging.info('Connected to:' + str(ser.portstr))
     ser.write(str.encode("rx\n"))
     ser.flush()
     print(ser.readline())
     log.write(str(ser.readline()) + "\n")
+    logging.info('Read data line')
     ser.close()
 
 # Runs serialread() function every second.
