@@ -41,7 +41,7 @@ def serialread(config):
     fname = now.strftime(config['arddatalogger']['outfilename'])
     # Save to file
     log = open(fname, 'at')
-    log.write(read_fmtd)
+    log.write(read_timed)
     log.close()
 
 ### Main program
