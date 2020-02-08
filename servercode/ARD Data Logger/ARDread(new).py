@@ -44,7 +44,7 @@ def serialread(config):
         stopbits=serial.STOPBITS_ONE,\
         bytesize=serial.EIGHTBITS,\
             timeout=1)
-    read_ser=now.strftime(%H:%M:%S)+","+ser.readline()
+    read_ser=now.strftime('%H:%M:%S')+","+ser.readline()
     read_fmtd = read_ser.decode("utf-8")
     print(read_fmtd)
     with log as text_file:
