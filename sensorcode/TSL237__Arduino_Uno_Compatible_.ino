@@ -34,6 +34,8 @@ void setup() {
   digitalWrite(DigPin, HIGH);
   pinMode(TslPwr, HIGH);
   attachInterrupt(IntPin, irq1, RISING);
+
+  Serial.println("Time,Light Voltage,Frequency,Temperature Voltage,Temperature (Degrees C),Temperature (Degrees F)");
 }
 void loop() {
   if (Serial.available() <= 0) {
@@ -44,19 +46,16 @@ void loop() {
       unsigned long hz = t;
       Serial.print("FREQ: "); 
       Serial.print(hz);
-      Serial.print(" = "); 
-      Serial.print((hz+50)/100);  // +50 == rounding last digit
-      Serial.print(" mW/m2; ");
 
       int reading = analogRead(TempSensorPin);
       float voltage = reading * 5.0;
       voltage /= 1024.0;
       Serial.print("\t");
-      Serial.print(voltage); Serial.print(" volts; ");
+      Serial.print(voltage);
       float tempC = (voltage - 0.5) * 100;
-      Serial.print(tempC); Serial.print(" degrees C; ");
+      Serial.print(tempC);
       float tempF = tempC * 1.8 + 32;
-      Serial.print(tempF); Serial.println(" degrees F");
+      Serial.println(tempF);
 
       //Write data to serial port
       Serial.write(voltage);
