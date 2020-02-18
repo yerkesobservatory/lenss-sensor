@@ -33,10 +33,10 @@ def serialread(config):
     now = datetime.now()
     # Read value from Arduino
     read_ser=ser.readline()
-    print(repr(read_ser))
+    #print(repr(read_ser))
     read_fmtd = read_ser.decode("utf-8")
-    read_timed = now.strftime('%H:%M:%S,')+read_fmtd
-    print(read_fmtd)
+    read_timed = now.strftime('%H:%M:%S, ')+read_fmtd
+    print(read_timed)
     # Make filename
     fname = now.strftime(config['arddatalogger']['outfilename'])
     # Save to file
