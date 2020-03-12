@@ -30,12 +30,19 @@ def serialread(config):
     """ Read the serial value from the arduino and writes
         it to the file.
     """
-    now = datetime.now()
+    now=datetime.now()
+    """tim=time.localtime()
+    for element in tim:
+            element = str(element)
+            if len(element) < 2:
+                element = "0" + element"""
+    #timestring=str(tim[3])+":"+str(tim[4])+":"+str(tim[5])+", "
+    timestring=now.strftime("%H:%M:%S,")
     # Read value from Arduino
     read_ser=ser.readline()
     #print(repr(read_ser))
     read_fmtd = read_ser.decode("utf-8")
-    read_timed = now.strftime('%H:%M:%S, ')+read_fmtd
+    read_timed = timestring+read_fmtd
     print(read_timed)
     # Make filename
     fname = now.strftime(config['arddatalogger']['outfilename'])

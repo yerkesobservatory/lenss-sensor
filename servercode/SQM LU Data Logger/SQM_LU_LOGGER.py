@@ -35,7 +35,7 @@ config.read(Config_FilePathName)
 
 now = datetime.now()
 #log = open('./sqmlu_' + now.strftime('%Y-%m-%d') + '.txt', 'a')
-log = open(now.strftime(config['sqmludatalogger']['outfilename']),'at')
+filename = now.strftime(config['sqmludatalogger']['outfilename'])
 
 logging.basicConfig(filename=now.strftime(config['logging']['logfile']),level=logging.DEBUG)
 
@@ -58,6 +58,8 @@ def port(config):
 # Main read function. Sends a string to the defined port and
 # prints the resulting output to a file "log.txt" and the terminal.
 def serialread(config):
+    now = datetime.now()
+    timestring = now.strftime("%H:%M:%S,")
     ser = serial.Serial(
         port=port(config),\
         baudrate=115200,\
@@ -69,10 +71,16 @@ def serialread(config):
     logging.info('Connected to:' + str(ser.portstr))
     ser.write(str.encode("rx\n"))
     ser.flush()
-    print(ser.readline())
-    log.write(str(ser.readline()) + "\n")
+    serline = ser.readline()
+    serline_utf = serline.decode("utf-8")
+    dataline=timestring+serline_utf+"\n"
+    print(dataline)
+    # log.write(str(ser.readline()) + "\n")
+    log = open(filename, 'at')
+    log.write(timestring+serline_utf+"\n")
     logging.info('Read data line')
     ser.close()
+    log.close()
 
 # Runs serialread() function every second.
 while True:
