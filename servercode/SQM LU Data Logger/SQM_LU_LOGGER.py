@@ -35,9 +35,6 @@ config.read(Config_FilePathName)
 
 now = datetime.now()
 #log = open('./sqmlu_' + now.strftime('%Y-%m-%d') + '.txt', 'a')
-filename = now.strftime(config['sqmludatalogger']['outfilename'])
-
-logging.basicConfig(filename=now.strftime(config['logging']['logfile']),level=logging.DEBUG)
 
 # Automatically selects port syntax based on OS
 # IMPORTANT!!! - Assumes no other devices plugged in with 'USB Serial'
@@ -59,6 +56,8 @@ def port(config):
 # prints the resulting output to a file "log.txt" and the terminal.
 def serialread(config):
     now = datetime.now()
+    filename = now.strftime(config['sqmludatalogger']['outfilename'])
+    logging.basicConfig(filename=now.strftime(config['logging']['logfile']),level=logging.DEBUG)
     timestring = now.strftime("%H:%M:%S,")
     ser = serial.Serial(
         port=port(config),\
@@ -79,7 +78,6 @@ def serialread(config):
     log = open(filename, 'at')
     log.write(timestring+serline_utf+"\n")
     logging.info('Read data line')
-    ser.close()
     log.close()
 
 # Runs serialread() function every second.
