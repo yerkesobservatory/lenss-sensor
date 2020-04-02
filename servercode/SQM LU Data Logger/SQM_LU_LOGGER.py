@@ -79,6 +79,7 @@ def serialread(config):
     log.write(timestring+serline_utf+"\n")
     logging.info('Read data line')
     log.close()
+    #logging.close()
 
 # Runs serialread() function every second.
 while True:
