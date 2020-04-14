@@ -18,6 +18,7 @@ import  os
 import sys
 import logging
 from logging.handlers import TimedRotatingFileHandler
+import statistics
 
 ### Function Definitions
 def getardport(config):
@@ -43,7 +44,7 @@ config.read(Config_FilePathName)
 now=datetime.now()
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
-hand = TimedRotatingFileHandler(now.strftime(config['logging']['logfile']), when="midnight")
+hand = TimedRotatingFileHandler(now.strftime(config['logging']['ardlogfile']), when="midnight")
 hand.suffix = "%Y-%m-%d.log"
 logformat = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 hand.setFormatter(logging.Formatter(logformat))
@@ -60,6 +61,7 @@ ser  =  serial . Serial (
             timeout=5)
         
 def serialread(config):
+    time.sleep(1)
     """ Read the serial value from the arduino and writes
         it to the file.
     """
@@ -69,6 +71,7 @@ def serialread(config):
     tFahr = []
     tCels = []
     while True:
+        
         now=datetime.now()
         """tim=time.localtime()
         for element in tim:
@@ -83,14 +86,22 @@ def serialread(config):
         read_fmtd = read_ser.decode("utf-8")
 
         sdata = read_fmtd.split(",")
-        lvolt += sdata[1]
-        hz += sdata[2]
-        tvolt += sdata[3]
-        tFahr += sdata[4]
-        tCels += sdata[5]
+        print(sdata)
+        lvolt += float(sdata[0])
+        hz += float(sdata[1])
+        tvolt += float(sdata[2])
+        tFahr += float(sdata[3])
+        tCels += float(sdata[4])
 
-        if (now.strftime("%S") == "59"):
-            read_timed = timestring+str(statistics.median(lvolt))+str(statistics.median(hz))+str(statistics.median(tvolt))+str(stastics.median(tFahr))+str(statistics.median(tCels))
+        if (time.gmtime().tm_sec == 0):
+            read_timed = timestring+","
+            read_timed += str(statistics.median(lvolt))+","
+            read_timed += str(statistics.median(hz))+","
+            read_timed += str(statistics.median(tvolt))+","
+            read_timed += str(stastics.median(tFahr))+","
+            read_timed += str(statistics.median(tCels))
+            break
+        time.sleep(1)
 
     read_timed = timestring+read_fmtd
     print(read_timed)
@@ -106,4 +117,3 @@ def serialread(config):
 while True:
 
     serialread(config)
-    time.sleep(1)
