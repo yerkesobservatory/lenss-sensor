@@ -21,6 +21,7 @@ import time
 import os
 import sys
 import logging
+from logging.handlers import TimedRotatingFileHandler
 
 # Get config file name from argument
 if len(sys.argv) < 2:
@@ -34,6 +35,13 @@ config = configparser.ConfigParser()
 config.read(Config_FilePathName)
 
 now = datetime.now()
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+hand = TimedRotatingFileHandler(now.strftime(config['logging']['logfile']),when="midnight")
+hand.suffix = "%Y-%m-%d.log"
+logformat = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+hand.setFormatter(logging.Formatter(logformat))
+logger.addHandler(hand)
 #log = open('./sqmlu_' + now.strftime('%Y-%m-%d') + '.txt', 'a')
 
 # Automatically selects port syntax based on OS
@@ -57,7 +65,6 @@ def port(config):
 def serialread(config):
     now = datetime.now()
     filename = now.strftime(config['sqmludatalogger']['outfilename'])
-    logging.basicConfig(filename=now.strftime(config['logging']['logfile']),level=logging.DEBUG)
     timestring = now.strftime("%H:%M:%S,")
     ser = serial.Serial(
         port=port(config),\
@@ -67,7 +74,7 @@ def serialread(config):
         bytesize=serial.EIGHTBITS,\
             timeout=1)
     print("connected to: " + ser.portstr)
-    logging.info('Connected to:' + str(ser.portstr))
+    logger.info('Connected to:' + str(ser.portstr))
     ser.write(str.encode("rx\n"))
     ser.flush()
     serline = ser.readline()
@@ -75,11 +82,10 @@ def serialread(config):
     dataline=timestring+serline_utf+"\n"
     print(dataline)
     # log.write(str(ser.readline()) + "\n")
-    log = open(filename, 'at')
-    log.write(timestring+serline_utf+"\n")
-    logging.info('Read data line')
-    log.close()
-    #logging.close()
+    logfile = open(filename, 'at')
+    logfile.write(timestring+serline_utf+"\n")
+    logger.info('Read data line')
+    logfile.close()
 
 # Runs serialread() function every second.
 while True:
