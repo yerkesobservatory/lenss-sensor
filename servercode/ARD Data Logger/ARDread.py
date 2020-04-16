@@ -65,33 +65,29 @@ def serialread(config):
     """ Read the serial value from the arduino and writes
         it to the file.
     """
-    lvolt = []
+    """lvolt = []
     hz = []
     tvolt = []
     tFahr = []
     tCels = []
     while True:
-        
-        now=datetime.now()
-        """tim=time.localtime()
-        for element in tim:
-                element = str(element)
-                if len(element) < 2:
-                    element = "0" + element"""
-        #timestring=str(tim[3])+":"+str(tim[4])+":"+str(tim[5])+", "
-        timestring=now.strftime("%H:%M:%S,")
+        time.sleep(1)
+        now=datetime.now()"""
+       #timestring=str(tim[3])+":"+str(tim[4])+":"+str(tim[5])+", "
+    timestring=now.strftime("%H:%M:%S,")
         # Read value from Arduino
-        read_ser=ser.readline()
+    read_ser=ser.readline()
         #print(repr(read_ser))
-        read_fmtd = read_ser.decode("utf-8")
+    read_fmtd = read_ser.decode("utf-8")
 
-        sdata = read_fmtd.split(",")
-        print(sdata)
-        lvolt += float(sdata[0])
-        hz += float(sdata[1])
-        tvolt += float(sdata[2])
-        tFahr += float(sdata[3])
-        tCels += float(sdata[4])
+    """ sdata = read_fmtd.split(",")
+        sdata[4].strip("\r\n")
+        
+        lvolt += sdata[0]
+        hz += sdata[1]
+        tvolt += sdata[2]
+        tFahr += sdata[3]
+        tCels += sdata[4]
 
         if (time.gmtime().tm_sec == 0):
             read_timed = timestring+","
@@ -100,8 +96,7 @@ def serialread(config):
             read_timed += str(statistics.median(tvolt))+","
             read_timed += str(stastics.median(tFahr))+","
             read_timed += str(statistics.median(tCels))
-            break
-        time.sleep(1)
+            break"""
 
     read_timed = timestring+read_fmtd
     print(read_timed)
@@ -117,3 +112,4 @@ def serialread(config):
 while True:
 
     serialread(config)
+    #time.sleep(1)
