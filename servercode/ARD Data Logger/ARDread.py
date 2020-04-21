@@ -74,7 +74,7 @@ def serialread(config):
     tvolt = []
     tFahr = []
     tCels = []
-    sl = ([] for i in range(len(sdata)))
+    sl = [[] for i in range(5)]
     while True:
         time.sleep(1)
         now=datetime.now()
@@ -91,23 +91,24 @@ def serialread(config):
         sdata = read_fmtd.split(",")
         sdata[4].strip()
         
-        for i in sdata:
+        for i in range(len(sdata)):
             sl[i].append(float(sdata[i]))
 
         if (time.gmtime().tm_sec == 0):
-            for l in sl:
-                sl[l]=np.median(sl[l])
+            for l in range(len(sl)):
+                sl[l]=str(np.median(sl[l]))
             break
 
     read_timed = []
     read_timed.append(timestring)
     read_timed += sl
-    print(read_timed)
+    text_timed = ",".join(read_timed)
+    print(text_timed)
     # Make filename
     fname = now.strftime(config['arddatalogger']['outfilename'])
     # Save to file
     log = open(fname, 'at')
-    log.write(read_timed)
+    log.write(text_timed)
     log.close()
     logger.info('Connected to:' + str(getardport(config)))
     logger.info('Read data line')
