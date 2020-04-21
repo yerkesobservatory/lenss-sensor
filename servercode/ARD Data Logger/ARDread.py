@@ -17,6 +17,7 @@ import  os
 import sys
 import logging
 from logging.handlers import TimedRotatingFileHandler
+import numpy as np
 
 ### Function Definitions
 def getardport(config):
@@ -68,43 +69,39 @@ def serialread(config):
     """ Read the serial value from the arduino and writes
         it to the file.
     """
-    """lvolt = []
+    lvolt = []
     hz = []
     tvolt = []
     tFahr = []
     tCels = []
+    sl = ([] for i in range(len(sdata)))
     while True:
         time.sleep(1)
-        now=datetime.now()"""
-       #timestring=str(tim[3])+":"+str(tim[4])+":"+str(tim[5])+", "
-    timestring=now.strftime("%H:%M:%S,")
-    # Read value from Arduino
-    if ser:
-        read_ser=ser.readline()
-        #print(repr(read_ser))
-        read_fmtd = read_ser.decode("utf-8")
-    else:
-        read_fmtd = config['arddatalogger']['simardline']
-
-    """ sdata = read_fmtd.split(",")
-        sdata[4].strip("\r\n")
+        now=datetime.now()
+        #timestring=str(tim[3])+":"+str(tim[4])+":"+str(tim[5])+", "
+        timestring=now.strftime("%H:%M:%S,")
+        # Read value from Arduino
+        if ser:
+            read_ser=ser.readline()
+            #print(repr(read_ser))
+            read_fmtd = read_ser.decode("utf-8")
+        else:
+            read_fmtd = config['arddatalogger']['simardline']
+        # Read data from string
+        sdata = read_fmtd.split(",")
+        sdata[4].strip()
         
-        lvolt += sdata[0]
-        hz += sdata[1]
-        tvolt += sdata[2]
-        tFahr += sdata[3]
-        tCels += sdata[4]
+        for i in sdata:
+            sl[i].append(float(sdata[i]))
 
         if (time.gmtime().tm_sec == 0):
-            read_timed = timestring+","
-            read_timed += str(statistics.median(lvolt))+","
-            read_timed += str(statistics.median(hz))+","
-            read_timed += str(statistics.median(tvolt))+","
-            read_timed += str(stastics.median(tFahr))+","
-            read_timed += str(statistics.median(tCels))
-            break"""
+            for l in sl:
+                sl[l]=np.median(sl[l])
+            break
 
-    read_timed = timestring+read_fmtd
+    read_timed = []
+    read_timed.append(timestring)
+    read_timed += sl
     print(read_timed)
     # Make filename
     fname = now.strftime(config['arddatalogger']['outfilename'])
