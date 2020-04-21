@@ -79,7 +79,7 @@ def serialread(config):
         time.sleep(1)
         now=datetime.now()
         #timestring=str(tim[3])+":"+str(tim[4])+":"+str(tim[5])+", "
-        timestring=now.strftime("%H:%M:%S,")
+        timestring=now.strftime("%H:%M:%S")
         # Read value from Arduino
         if ser:
             read_ser=ser.readline()
