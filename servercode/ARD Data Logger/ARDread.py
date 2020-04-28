@@ -78,6 +78,7 @@ def serialread(config):
     while True:
         time.sleep(1)
         now=datetime.now()
+        last = time.gmtime().tm_sec
         #timestring=str(tim[3])+":"+str(tim[4])+":"+str(tim[5])+", "
         timestring=now.strftime("%H:%M:%S")
         # Read value from Arduino
@@ -94,7 +95,7 @@ def serialread(config):
         for i in range(len(sdata)):
             sl[i].append(float(sdata[i]))
 
-        if (time.gmtime().tm_sec == 0):
+        if (last >= time.gmtime().tm_sec):
             for l in range(len(sl)):
                 sl[l]=str(np.median(sl[l]))
             break
@@ -103,6 +104,7 @@ def serialread(config):
     read_timed.append(timestring)
     read_timed += sl
     text_timed = ",".join(read_timed)
+    print(read_timed)
     print(text_timed)
     # Make filename
     fname = now.strftime(config['arddatalogger']['outfilename'])
