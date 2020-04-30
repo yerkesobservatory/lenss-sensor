@@ -1,6 +1,4 @@
-"""
-LENSS ARDUINO Read Program
-==========================
+""" LENSS ARDUINO Read Program ==========================
 
 This program reads data from the Arduino that
 is connected to the TSL237 sensor.
@@ -75,10 +73,10 @@ def serialread(config):
     tFahr = []
     tCels = []
     sl = [[] for i in range(5)]
+    last = time.gmtime().tm_sec
     while True:
         time.sleep(1)
         now=datetime.now()
-        last = time.gmtime().tm_sec
         #timestring=str(tim[3])+":"+str(tim[4])+":"+str(tim[5])+", "
         timestring=now.strftime("%H:%M:%S")
         # Read value from Arduino
@@ -91,9 +89,12 @@ def serialread(config):
         # Read data from string
         sdata = read_fmtd.split(",")
         sdata[4].strip()
-        
+        #print(sdata+["Seconds"]) #Testing by second while distinguishing from minutely data
+
         for i in range(len(sdata)):
             sl[i].append(float(sdata[i]))
+
+        print(sl)
 
         if (last >= time.gmtime().tm_sec):
             for l in range(len(sl)):
