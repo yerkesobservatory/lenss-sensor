@@ -29,6 +29,6 @@ echo "Date:" "$DATE" # Peace of mind
 # (device ID) Under a directory with the device ID. Currently only looks at 
 # first 4 characters. ID length can be changing 4 to the length of device ID 
 # required.
-awk -v out="$OUTFOLDER" 'BEGIN { FS = "," } ; NR==1{ h=$0 }NR>1{ print out"/"$1 }' $NEWFILE | xargs mkdir -vp && \
-awk -v out="$OUTFOLDER" -v date="$DATE" 'BEGIN { FS = "," } ; NR==1{ h=$0 }NR>1{ print (!a[$1]++? h ORS $0 : $0) > out"/"substr($1, 1, 4)"/"date"_"substr($1, 1, 4)"_raw.csv" }' $NEWFILE && \
+awk -v out="$OUTFOLDER" 'BEGIN { FS = ";" } ; NR==1{ h=$0 }NR>1{ print out"/"$1 }' $NEWFILE | xargs mkdir -vp && \
+awk -v out="$OUTFOLDER" -v date="$DATE" 'BEGIN { FS = ";" } ; NR==1{ h=$0 }NR>1{ print (!a[$1]++? h ORS $0 : $0) > out"/"substr($1, 1, 4)"/"date"_"substr($1, 1, 4)"_raw.csv" }' $NEWFILE && \
 echo "Done"
