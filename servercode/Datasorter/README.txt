@@ -29,7 +29,7 @@ About:	This script is designed to automatically sort
 
 	The first line of the input file should be a header 
 
-	All entries should be space separated. This default 
+	All entries should be semi-colon separated. This 
 	delimiter can be changed manually in the script. 
 
 	The script will break if the located input file does 
