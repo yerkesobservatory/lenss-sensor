@@ -77,35 +77,39 @@ def serialread(config):
     while True:
         time.sleep(1)
         now=datetime.now()
+
         #timestring=str(tim[3])+":"+str(tim[4])+":"+str(tim[5])+", "
         timestring=now.strftime("%H:%M:%S")
+        print("C")
+        if (last > time.gmtime().tm_sec):
+            for l in range(len(sl)):
+                sl[l]=str(np.median(sl[l]))
+            break
+        print("A")
         # Read value from Arduino
         if ser:
             read_ser=ser.readline()
             #print(repr(read_ser))
             read_fmtd = read_ser.decode("utf-8")
+            print("D")
         else:
             read_fmtd = config['arddatalogger']['simardline']
         # Read data from string
         sdata = read_fmtd.split(",")
         sdata[4].strip()
+        print("B")
         #print(sdata+["Seconds"]) #Testing by second while distinguishing from minutely data
-
         for i in range(len(sdata)):
             sl[i].append(float(sdata[i]))
+        
 
         print(sl)
-
-        if (last >= time.gmtime().tm_sec):
-            for l in range(len(sl)):
-                sl[l]=str(np.median(sl[l]))
-            break
 
     read_timed = []
     read_timed.append(timestring)
     read_timed += sl
     text_timed = ",".join(read_timed)
-    print(read_timed)
+    #print(read_timed)
     print(text_timed)
     # Make filename
     fname = now.strftime(config['arddatalogger']['outfilename'])
