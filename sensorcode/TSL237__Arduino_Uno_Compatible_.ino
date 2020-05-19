@@ -13,10 +13,8 @@ int DigPin = 2;
 int TslPwr = 8;
 int IntPin = 0;
 const int TempSensorPin = 0; //the analog pin the TMP36's Vout (sense) pin is connected to
-<<<<<<< HEAD
 unsigned long hz;
-=======
->>>>>>> ard-serial-communication
+unsigned long oldcnt;
 
 int inByte = 0; //incoming serial byte
 
@@ -35,7 +33,6 @@ void setup() {
   while (!Serial) {
     ;
   }
-  establishcontact();
   Serial.println("START");
   delay(1000);
   pinMode(DigPin, INPUT);
@@ -45,11 +42,6 @@ void setup() {
   attachInterrupt(IntPin, irq1, RISING);
 }
 
-///////////////////////////////////////////////////////////////////
-//
-// MAIN LOOP: Something goes here
-//
-<<<<<<< HEAD
 void loop() 
 {
   float lux = analogRead(A5);
@@ -72,74 +64,18 @@ void loop()
   
   if (millis() - last >= 1000)
   {
-    Serial.print(AVolt); Serial.print(" | ");
+    Serial.print(AVolt); Serial.print(",");
     last = millis();
-    Serial.print("FREQ: "); 
-    Serial.print(hz);
-    Serial.print(" = "); 
-    Serial.print((hz+50)/100);  // +50 == rounding last digit
-    Serial.print(" mW/m2; ");
+    Serial.print(hz); Serial.print(",");
     oldcnt = t;
 
     int reading = analogRead(TempSensorPin);
     float voltage = reading * 5.0;
     voltage /= 1024.0;
-    Serial.print("\t");
-    Serial.print(voltage); Serial.print(" volts; ");
+    Serial.print(voltage); Serial.print(",");
     float tempC = (voltage - 0.5) * 100;
-    Serial.print(tempC); Serial.print(" degrees C; ");
+    Serial.print(tempC); Serial.print(",");
     float tempF = 1.8 * tempC + 32;
-    Serial.print(tempF); Serial.println(" degrees F");
-    
-    if (millis() % 3600000 == 0)
-    {
-=======
-///////////////////////////////////////////////////////////////////
-void loop() {
-  if (Serial.available() <= 0) {
-    inByte = Serial.read();
-    if (millis() - last >= 1000) {
-      last = millis();
-      t = cnt;
-      unsigned long hz = t;
-      Serial.print("FREQ: "); 
-      Serial.print(hz);
-      Serial.print(" = "); 
-      Serial.print((hz+50)/100);  // +50 == rounding last digit
-      Serial.print(" mW/m2; ");
-
-      int reading = analogRead(TempSensorPin);
-      float voltage = reading * 5.0;
-      voltage /= 1024.0;
-      Serial.print("\t");
-      Serial.print(voltage); Serial.print(" volts; ");
-      float tempC = (voltage - 0.5) * 100;
-      Serial.print(tempC); Serial.print(" degrees C; ");
-      float tempF = tempC * 1.8 + 32;
-      Serial.print(tempF); Serial.println(" degrees F");
-
-      //Write data to serial port
-      Serial.write(voltage);
-      Serial.write(tempC);
-      Serial.write(tempF);
-    
->>>>>>> ard-serial-communication
-      cnt = 0;
-
-  } else {
-    // not sure yet
-  }
-}
-
-///////////////////////////////////////////////////////////////////
-//
-// Establish Contact: send 'calibration' character for recieving 
-// program
-//
-///////////////////////////////////////////////////////////////////
-void establishcontact() {
-  while (Serial.available() <= 0) {
-    Serial.print('A');
-    delay(300);
+    Serial.println(tempF);
   }
 }
