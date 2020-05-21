@@ -17,6 +17,10 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 import numpy as np
 
+fmt = ['%.2f','%.0f','%.2f','%.1f','%.1f']
+dltd = 0
+ldltd = 0
+
 ### Function Definitions
 def getardport(config):
     """ Returns the port string for the arduino
@@ -56,17 +60,22 @@ if int(config['arddatalogger']['simarduino']):
     ser = None
 else:
     ser  =  serial . Serial ( port=getardport(config),\
-                              baudrate=115200,\
+                              baudrate=9600,\
                               parity=serial.PARITY_NONE,\
                               stopbits=serial.STOPBITS_ONE,\
                               bytesize=serial.EIGHTBITS,\
                               timeout=5)
+    ser.readline()
         
 def serialread(config):
-    time.sleep(1)
     """ Read the serial value from the arduino and writes
         it to the file.
     """
+    time.sleep(1)
+
+    global dltd
+    global ldltd
+
     lvolt = []
     hz = []
     tvolt = []
@@ -75,35 +84,33 @@ def serialread(config):
     sl = [[] for i in range(5)]
     last = time.gmtime().tm_sec
     while True:
-        time.sleep(1)
+        time.sleep(2)
         now=datetime.now()
 
         #timestring=str(tim[3])+":"+str(tim[4])+":"+str(tim[5])+", "
         timestring=now.strftime("%H:%M:%S")
-        print("C")
         if (last > time.gmtime().tm_sec):
             for l in range(len(sl)):
-                sl[l]=str(np.median(sl[l]))
+                sl[l]=fmt[l] % np.median(sl[l])
             break
-        print("A")
         # Read value from Arduino
         if ser:
             read_ser=ser.readline()
             #print(repr(read_ser))
             read_fmtd = read_ser.decode("utf-8")
-            print("D")
         else:
             read_fmtd = config['arddatalogger']['simardline']
         # Read data from string
         sdata = read_fmtd.split(",")
-        sdata[4].strip()
-        print("B")
-        #print(sdata+["Seconds"]) #Testing by second while distinguishing from minutely data
-        for i in range(len(sdata)):
-            sl[i].append(float(sdata[i]))
-        
-
-        print(sl)
+        print(sdata)
+        if (len(sdata) == 5):
+            sdata[4].strip()
+            #print(sdata+["Seconds"]) #Testing by second while distinguishing from minutely data
+            for i in range(len(sdata)):
+                sl[i].append(float(sdata[i]))
+        else:
+            dltd+=1
+        print(time.gmtime().tm_sec)
 
     read_timed = []
     read_timed.append(timestring)
@@ -111,11 +118,15 @@ def serialread(config):
     text_timed = ",".join(read_timed)
     #print(read_timed)
     print(text_timed)
+    print(str(dltd) + " pieces of data deleted")
     # Make filename
     fname = now.strftime(config['arddatalogger']['outfilename'])
     # Save to file
     log = open(fname, 'at')
-    log.write(text_timed)
+    log.write(text_timed+"\r\n")
+    if (dltd-ldltd >= 100):
+        log.write(str(dltd)+"lines deleted"+"\r\n")
+        ldltd = dltd
     log.close()
     logger.info('Connected to:' + str(getardport(config)))
     logger.info('Read data line')
