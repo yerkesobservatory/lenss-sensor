@@ -83,8 +83,9 @@ def serialread(config):
     tCels = []
     sl = [[] for i in range(5)]
     last = time.gmtime().tm_sec
+
     while True:
-        time.sleep(2)
+        time.sleep(3)
         now=datetime.now()
 
         #timestring=str(tim[3])+":"+str(tim[4])+":"+str(tim[5])+", "
@@ -111,6 +112,7 @@ def serialread(config):
         else:
             dltd+=1
         print(time.gmtime().tm_sec)
+        last = time.gmtime().tm_sec
 
     read_timed = []
     read_timed.append(timestring)
