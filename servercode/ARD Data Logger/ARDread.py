@@ -107,8 +107,11 @@ def serialread(config):
         if (len(sdata) == 5):
             sdata[4].strip()
             #print(sdata+["Seconds"]) #Testing by second while distinguishing from minutely data
-            for i in range(len(sdata)):
-                sl[i].append(float(sdata[i]))
+            try:
+                for i in range(len(sdata)):
+                    sl[i].append(float(sdata[i]))
+            except:
+                dltd+=1
         else:
             dltd+=1
         print(time.gmtime().tm_sec)
