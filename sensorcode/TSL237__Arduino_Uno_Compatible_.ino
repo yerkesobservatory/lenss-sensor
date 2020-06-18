@@ -22,12 +22,6 @@ void irq1() {
   cnt++;
 }
 
-///////////////////////////////////////////////////////////////////
-//
-// SETUP: Start and wait for serial connection, assign pins, and 
-// setup attatch interupt.
-//
-///////////////////////////////////////////////////////////////////
 void setup() {
   Serial.begin(9600);
   while (!Serial) {
@@ -40,7 +34,6 @@ void setup() {
   digitalWrite(DigPin, HIGH);
   pinMode(TslPwr, HIGH);
   attachInterrupt(IntPin, irq1, RISING);
-}
 
 void loop() 
 {
