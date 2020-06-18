@@ -20,6 +20,7 @@ import numpy as np
 fmt = ['%.2f','%.0f','%.2f','%.1f','%.1f']
 dltd = 0
 ldltd = 0
+starttime = datetime.now().strftime("%H:%M:%S, %Y-%m-%d")
 
 ### Function Definitions
 def getardport(config):
@@ -75,6 +76,7 @@ def serialread(config):
 
     global dltd
     global ldltd
+    global starttime
 
     lvolt = []
     hz = []
@@ -130,7 +132,7 @@ def serialread(config):
     log = open(fname, 'at')
     log.write(text_timed+"\r\n")
     if (dltd-ldltd >= 100):
-        log.write(str(dltd)+"lines deleted"+"\r\n")
+        logger.info(str(dltd)+" lines deleted since "+starttime+"\r\n")
         ldltd = dltd
     log.close()
     logger.info('Connected to:' + str(getardport(config)))

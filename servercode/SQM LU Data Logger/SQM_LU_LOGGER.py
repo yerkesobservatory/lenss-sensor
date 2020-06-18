@@ -37,7 +37,7 @@ config.read(Config_FilePathName)
 now = datetime.now()
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
-hand = TimedRotatingFileHandler(now.strftime(config['logging']['logfile']),when="midnight")
+hand = TimedRotatingFileHandler(now.strftime(config['logging']['sqmlogfile']),when="midnight")
 hand.suffix = "%Y-%m-%d.log"
 logformat = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 hand.setFormatter(logging.Formatter(logformat))
@@ -90,4 +90,4 @@ def serialread(config):
 # Runs serialread() function every second.
 while True:
     serialread(config)
-    time.sleep(1)
+    time.sleep(60)
