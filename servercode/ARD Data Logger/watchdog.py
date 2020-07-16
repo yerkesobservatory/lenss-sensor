@@ -4,8 +4,12 @@ import configparser
 from datetime import datetime
 import time
 
+Password_FilePathName = sys.argv[2]
+readPassword = configparser.ConfigParser()
+readPassword.read(Password_FilePathName)
+
 port = 465
-password = input("enter password:")
+password = readPassword['email']['password']
 smtp_server = "smtp.gmail.com"
 sender = "lenssserver@gmail.com"
 receivers = ["joe.murphy1415@gmail.com", "adam@glaseducation.org"]
@@ -37,8 +41,5 @@ def sendstatus():
         for address in receivers:
            server.sendmail(sender, address, message)
 
-while True:
-    now=datetime.now()
-    if(now.strftime("%H") == '15'):
-        sendstatus()
-    time.sleep(3600)
+
+sendstatus()

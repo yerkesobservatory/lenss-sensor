@@ -87,14 +87,16 @@ def serialread(config):
     last = time.gmtime().tm_sec
 
     while True:
-        time.sleep(3)
+        time.sleep(2)
         now=datetime.now()
 
         #timestring=str(tim[3])+":"+str(tim[4])+":"+str(tim[5])+", "
         timestring=now.strftime("%H:%M:%S")
         if (last > time.gmtime().tm_sec):
             for l in range(len(sl)):
-                sl[l]=fmt[l] % np.median(sl[l])
+                sl[l].sort()
+                sl[l] = sl[l][len(sl[l])//5:-(len(sl[l])//5)]
+                sl[l]=fmt[l] % np.mean(sl[l])
             break
         # Read value from Arduino
         if ser:

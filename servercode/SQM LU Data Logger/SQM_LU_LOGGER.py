@@ -35,6 +35,7 @@ config = configparser.ConfigParser()
 config.read(Config_FilePathName)
 
 now = datetime.now()
+last = time.gmtime().tm_sec
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 hand = TimedRotatingFileHandler(now.strftime(config['logging']['sqmlogfile']),when="midnight")
@@ -63,31 +64,34 @@ def port(config):
 # Main read function. Sends a string to the defined port and
 # prints the resulting output to a file "log.txt" and the terminal.
 def serialread(config):
-    now = datetime.now()
-    filename = now.strftime(config['sqmludatalogger']['outfilename'])
-    timestring = now.strftime("%H:%M:%S,")
-    ser = serial.Serial(
-        port=port(config),\
-        baudrate=115200,\
-        parity=serial.PARITY_NONE,\
-        stopbits=serial.STOPBITS_ONE,\
-        bytesize=serial.EIGHTBITS,\
-            timeout=1)
-    print("connected to: " + ser.portstr)
-    logger.info('Connected to:' + str(ser.portstr))
-    ser.write(str.encode("rx\n"))
-    ser.flush()
-    serline = ser.readline()
-    serline_utf = serline.decode("utf-8")
-    dataline=timestring+serline_utf+"\n"
-    print(dataline)
-    # log.write(str(ser.readline()) + "\n")
-    logfile = open(filename, 'at')
-    logfile.write(timestring+serline_utf+"\n")
-    logger.info('Read data line')
-    logfile.close()
+    global last
+    if(last > time.gmtime().tm_sec):
+        now = datetime.now()
+        filename = now.strftime(config['sqmludatalogger']['outfilename'])
+        timestring = now.strftime("%H:%M:%S,")
+        ser = serial.Serial(
+            port=port(config),\
+            baudrate=115200,\
+            parity=serial.PARITY_NONE,\
+            stopbits=serial.STOPBITS_ONE,\
+            bytesize=serial.EIGHTBITS,\
+                timeout=1)
+        print("connected to: " + ser.portstr)
+        logger.info('Connected to:' + str(ser.portstr))
+        ser.write(str.encode("rx\n"))
+        ser.flush()
+        serline = ser.readline()
+        serline_utf = serline.decode("utf-8")
+        dataline=timestring+serline_utf+"\n"
+        print(dataline)
+        # log.write(str(ser.readline()) + "\n")
+        logfile = open(filename, 'at')
+        logfile.write(timestring+serline_utf+"\n")
+        logger.info('Read data line')
+        logfile.close()
+    last = time.gmtime().tm_sec
 
 # Runs serialread() function every second.
 while True:
     serialread(config)
-    time.sleep(60)
+    time.sleep(1)
