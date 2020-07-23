@@ -6,6 +6,7 @@
 // each function does and some clarification on 
 // pin assignments
 
+#define TSLserialNR "LENSS_TSL_0001"
 volatile unsigned long cnt = 0;
 unsigned long t = 0;
 unsigned long last;
@@ -70,6 +71,7 @@ void loop()
     float tempC = (voltage - 0.5) * 100;
     Serial.print(tempC); Serial.print(",");
     float tempF = 1.8 * tempC + 32;
-    Serial.println(tempF);
+    Serial.print(tempF); Serial.print(",");
+    Serial.println(TSLserialNR);
   }
 }
