@@ -34,6 +34,7 @@ void setup() {
   digitalWrite(DigPin, HIGH);
   pinMode(TslPwr, HIGH);
   attachInterrupt(IntPin, irq1, RISING);
+}
 
 void loop() 
 {
