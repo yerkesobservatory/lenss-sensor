@@ -1,5 +1,7 @@
 # LENSS-Sensor
 This project contains code and documentation for the LENSS-Sensor being developed at [GLAS](https://www.glaseducation.org). Details on the projects are on the "Project Page" at [Yerkesprojects/Programs/Lenss](https://sites.google.com/a/starsatyerkes.net/yerkesprojects/programs/lenss). If you have any qestions about this page, ask Alex, Joe, Adam or Marc.
+<<<<<<< HEAD
+=======
 
 ## System Architecture
 
@@ -12,7 +14,7 @@ This project contains code and documentation for the LENSS-Sensor being develope
     * SerialCallResponse.ino: tutorial used to demonstrate how the arduino sends data to other devices, which allows the arduino to push our sensor's data to the pi
     * TSL237_Datalogging.ino: tsl237 reader code intended to be used with an adafruit feather; the code will not work with the pins available on feather
     * TSL237_Uno_CSVfmtd.ino: old program used to experiment with CSV-friendly file formatting
-    * *TSL237_Arduino_Uno_Compatible.ino: THE MOST UP-TO-Date PROGRAM used for the arduino when dark enough, it interrupts all current processes to update a count when light hits the tsl and prints luminosity alongside temperature data 
+    * *TSL237_Arduino_Uno_Compatible.ino: THE MOST UP-TO-Date PROGRAM used for the arduino when dark enough, it interrupts all current processes to update a count when light hits the tsl and prints luminosity alongside temperature data
     * TSL2591_Datalogging.ino: code used to read the TSL2591 lux sensor; no longer in use since the switch to tsl237
   * *servercode: programs used for manipulating and storing data received by the sensor
     * *ARD Data Logger: programs related to reading data from the arduino
@@ -29,4 +31,4 @@ stuffs: miscellaneous outdated codes
 
 ## Programs
 List of the different programs and what they do.
-
+>>>>>>> b2ccc51066059c10bca48773f5a931fd226681b3
