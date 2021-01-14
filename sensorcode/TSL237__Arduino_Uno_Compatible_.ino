@@ -1,23 +1,24 @@
-// TODO:
-//
-// Add more comments for what functions do
-// -or-
-// Create README for the program with info on what 
-// each function does and some clarification on 
-// pin assignments
+#include <OneWire.h>
+#include <DallasTemperature.h>
 
 #define TSLserialNR "LENSS_TSL_0001"
+#define ONE_WIRE_BUS 4
+
 volatile unsigned long cnt = 0;
 unsigned long t = 0;
 unsigned long last;
+
 int DigPin = 2;
 int TslPwr = 8;
 int IntPin = 0;
-const int TempSensorPin = 0; //the analog pin the TMP36's Vout (sense) pin is connected to
+
 unsigned long hz;
 unsigned long oldcnt;
 
 int inByte = 0; //incoming serial byte
+
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
 
 void irq1() {
   cnt++;
@@ -30,17 +31,21 @@ void setup() {
   }
   Serial.println("START");
   delay(1000);
+  
   pinMode(DigPin, INPUT);
   pinMode(TslPwr, OUTPUT);
   digitalWrite(DigPin, HIGH);
   pinMode(TslPwr, HIGH);
   attachInterrupt(IntPin, irq1, RISING);
+  
+  sensors.begin();
 }
 
 void loop() 
 {
   float lux = analogRead(A5);
   float AVolt = lux * 5/1023;
+  sensors.requestTemperatures();
   
   if (AVolt > 2.5)
   {
@@ -64,14 +69,7 @@ void loop()
     Serial.print(hz); Serial.print(",");
     oldcnt = t;
 
-    int reading = analogRead(TempSensorPin);
-    float voltage = reading * 5.0;
-    voltage /= 1024.0;
-    Serial.print(voltage); Serial.print(",");
-    float tempC = (voltage - 0.5) * 100;
-    Serial.print(tempC); Serial.print(",");
-    float tempF = 1.8 * tempC + 32;
-    Serial.print(tempF); Serial.print(",");
+    Serial.print(sensors.getTempCByIndex(0)); Serial.print(",");
     Serial.println(TSLserialNR);
   }
 }
