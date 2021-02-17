@@ -8,12 +8,15 @@ volatile unsigned long cnt = 0;
 unsigned long t = 0;
 unsigned long last;
 
-int DigPin = 3; // Digital pin that the TSL connects to
-int TslPwr = 5; // Power output pin to activate and deactivate TSL
-int IntPin = 0; // Interupt number that the TSL uses (must connect to DigPin)
+int DigPin = 3;
+int TslPwr = 5;
+int IntPin = 0;
 
 unsigned long hz;
 unsigned long oldcnt;
+unsigned long T;
+int delta;
+String message;
 
 int inByte = 0; //incoming serial byte
 
@@ -43,6 +46,8 @@ void setup() {
 
 void loop() 
 {
+  T = millis();
+  delta = T - last;
   float lux = analogRead(A5);
   float AVolt = lux * 3.3/1023;
   sensors.requestTemperatures();
@@ -50,27 +55,19 @@ void loop()
   if (AVolt > 2.5)
   {
     digitalWrite(TslPwr, LOW);
-    hz = 0;
   }
   else
   {
     digitalWrite(TslPwr, HIGH);
-    if (millis() - last >= 1000)
-    {
-      t = cnt;
-      hz = t - oldcnt;
-    }
   }
   
-  if (millis() - last >= 1000)
+  if (T - last >= 1000)
   {
-    Serial.print(AVolt); Serial.print(",");
-    last = millis();
-    Serial.print(hz); Serial.print(",");
+    last = T;
+    t = cnt;
+    hz = t - oldcnt;
     oldcnt = t;
-
-    Serial.print(sensors.getTempCByIndex(0)); Serial.print(",");
-    Serial.print(millis()); Serial.print(",");
-    Serial.println(TSLserialNR);
+    message = String(AVolt)+","+String(hz)+","+String(sensors.getTempCByIndex(0))+","+String(delta)+","+String(TSLserialNR);
+    Serial.println(message);
   }
 }
