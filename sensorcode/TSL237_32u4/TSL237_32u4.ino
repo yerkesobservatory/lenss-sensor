@@ -1,73 +1,73 @@
-#include <OneWire.h>
-#include <DallasTemperature.h>
+#include <OneWire.h> //temperature Sensor Libraries
+#include <DallasTemperature.h> 
 
-#define TSLserialNR "LENSS_TSL_000X"
-#define ONE_WIRE_BUS 2
+#define TSLserialNR "LENSS_TSL_000X" //establishes fixed ID number
+#define ONE_WIRE_BUS 2 //data pin for the temp sensor
 
-volatile unsigned long cnt = 0;
-unsigned long t = 0;
-unsigned long last;
+volatile unsigned long cnt = 0; //preps variables; cnt is photon count,
+unsigned long t = 0; //t is used to copy values from other variables,
+unsigned long last; //last is the recorded time of the last datapoint
 
-int DigPin = 3;
-int TslPwr = 5;
+int DigPin = 3; //DigPin and IntPin refer to the same spot, but interrupt and digital pins have different names
+int TslPwr = 5; //digital pin used to power tsl for convenient on/off switch
 int IntPin = 0;
 
-unsigned long hz;
-unsigned long oldcnt;
-unsigned long T;
-int delta;
-String message;
+unsigned long hz; //frequency of photon counts per second
+unsigned long oldcnt; //last recorded photon count
+unsigned long T; //time storage
+int delta; //time elapsed since last data point
+String message; //message carried to pi
+float lux; //raw output from photoresistor circuit
+float volt; //output converted to voltage
 
 int inByte = 0; //incoming serial byte
 
-OneWire oneWire(ONE_WIRE_BUS);
+OneWire oneWire(ONE_WIRE_BUS); //sets the temp sensor from a oneWire port
 DallasTemperature sensors(&oneWire);
 
 void irq1() {
-  cnt++;
+  cnt++; //simple increase by one each time irql gets called
 }
 
-void setup() {
-  Serial.begin(9600);
+void setup() { //setup is a special function that runs once at the start of an arduino code
+  Serial.begin(9600); //begins serial operation at 9600 baudrate
   while (!Serial) {
-    ;
+    ; //cease operations if data won't reach pi
   }
-  Serial.println("START");
-  delay(1000);
-  
-  pinMode(DigPin, INPUT);
+  pinMode(DigPin, INPUT); //sets up digital pins; outputs send power, inputs receive info
   pinMode(TslPwr, OUTPUT);
-  digitalWrite(DigPin, HIGH);
+  digitalWrite(DigPin, HIGH); //TSL switched on
   pinMode(TslPwr, HIGH);
-  attachInterrupt(IntPin, irq1, RISING);
+  attachInterrupt(IntPin, irq1, RISING); //interrupt to run irql (cnt++) every time data comes from the interrupt pin
   
-  sensors.begin();
+  sensors.begin(); //initializes temp sensor
 }
 
-void loop() 
+void loop() //loop is the other special function of arduinos; it repeats indefinitely
 {
-  T = millis();
-  delta = T - last;
-  float lux = analogRead(A5);
-  float AVolt = lux * 3.3/1023;
-  sensors.requestTemperatures();
+ 
+  lux = analogRead(A5); //reads A5
+  volt = lux * 3.3/1023; //corrects lux from a scale of 1023 (analog scale) to 3.3 (voltage received)
+  sensors.requestTemperatures(); //reads temp sensor
   
-  if (AVolt > 2.5)
+  if (volt > 2.5)
   {
-    digitalWrite(TslPwr, LOW);
+    digitalWrite(TslPwr, LOW); //shuts down tsl when it's too bright
   }
   else
   {
-    digitalWrite(TslPwr, HIGH);
+    digitalWrite(TslPwr, HIGH); //switches back on when dark enough
   }
-  
-  if (T - last >= 1000)
+
+  T = millis(); //store the time before check
+  delta = T - last;  //gets elapsed time stored in delta
+  if (delta >= 1000) //after 1 second
   {
-    last = T;
-    t = cnt;
-    hz = t - oldcnt;
+    last = T; 
+    t = cnt; //because interrupt is incredibly fast, t stores the count right when the reading is taken
+    hz = round((t - oldcnt)*1000/1237); //takes photon counts and puts them in Hz (#/s)
     oldcnt = t;
-    message = String(AVolt)+","+String(hz)+","+String(sensors.getTempCByIndex(0))+","+String(delta)+","+String(TSLserialNR);
-    Serial.println(message);
+    message = String(volt)+","+String(hz)+","+String(sensors.getTempCByIndex(0))+","+String(delta)+","+String(TSLserialNR);
+    Serial.println(message); //assembles message and sends it to the pi
   }
 }
