@@ -6,7 +6,7 @@
 
 volatile unsigned long cnt = 0; //preps variables; cnt is photon count,
 unsigned long t = 0; //t is used to copy values from other variables,
-unsigned long last; //last is the recorded time of the last datapoint
+unsigned long last = 0; //last is the recorded time of the last datapoint
 
 int DigPin = 3; //DigPin and IntPin refer to the same spot, but interrupt and digital pins have different names
 int TslPwr = 5; //digital pin used to power tsl for convenient on/off switch
@@ -14,7 +14,7 @@ int IntPin = 0;
 
 unsigned long hz; //frequency of photon counts per second
 unsigned long oldcnt; //last recorded photon count
-unsigned long T; //time storage
+unsigned long T, Tlast; //time storage
 int delta; //time elapsed since last data point
 String message; //message carried to pi
 float lux; //raw output from photoresistor circuit
@@ -63,11 +63,16 @@ void loop() //loop is the other special function of arduinos; it repeats indefin
   delta = T - last;  //gets elapsed time stored in delta
   if (delta >= 1000) //after 1 second
   {
-    last = T; 
+    //last = T; 
+    while( T-last > 1000) { last += 1000; }
+    //last += 1000;
     t = cnt; //because interrupt is incredibly fast, t stores the count right when the reading is taken
-    hz = round((t - oldcnt)*1000/1237); //takes photon counts and puts them in Hz (#/s)
+    hz = round((t - oldcnt)*1000/(T-Tlast)); //takes photon counts and puts them in Hz (#/s)
+    //hz = t - oldcnt; //takes photon counts and puts them in Hz (#/s)
     oldcnt = t;
-    message = String(volt)+","+String(hz)+","+String(sensors.getTempCByIndex(0))+","+String(delta)+","+String(TSLserialNR);
+    message = String(volt)+","+String(hz)+","+String(sensors.getTempCByIndex(0))+","+String(T-Tlast)+","+
+              String(TSLserialNR);//+","+String(T/1000.0)+","+String(T-Tlast);
     Serial.println(message); //assembles message and sends it to the pi
+    Tlast = T;
   }
 }
