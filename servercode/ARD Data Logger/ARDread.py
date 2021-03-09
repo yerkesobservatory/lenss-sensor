@@ -17,7 +17,7 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 import numpy as np
 
-fmt = ['%.2f','%.0f','%.2f','%.1f','%.1f']
+fmt = ['%.2f','%.2f','%.2f','%.1f','%.1f']
 dltd = 0
 ldltd = 0
 starttime = datetime.now().strftime("%H:%M:%S, %Y-%m-%d")
@@ -78,11 +78,6 @@ def serialread(config):
     global ldltd
     global starttime
 
-    lvolt = []
-    hz = []
-    tvolt = []
-    tFahr = []
-    tCels = []
     sl = [[] for i in range(5)]
     last = time.gmtime().tm_sec
 
