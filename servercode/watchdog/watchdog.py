@@ -1,39 +1,28 @@
 # If pulled from github, delete the token file. credentials.json is connected to lenss@glaseducation.org
 
-from __future__ import print_function
+from __future__ import print_function #imports for Google Drive API functionality
 import os.path
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta #time based variables for search query function
 
-import smtplib, ssl
+import smtplib #email code imports
 import os, sys
 import configparser
+from getpass import getpass
 
-Email_FilePathName = sys.argv[1]
-readEmail = configparser.ConfigParser()
-readEmail.read(Email_FilePathName)
-
-port = 465
-password = readEmail['email']['password']
-smtp_server = "smtp.gmail.com"
-sender = readEmail['email']['username']
-receivers = readEmail['watchdog']['mailingList']
-
-context = ssl.create_default_context()
-
-def getSearchQuery():
-    yesterday = datetime.now() - timedelta(1)
-    time = yesterday.strftime('%Y-%m-%d_LENSSTSL')
-    return time
+def getSearchQuery(): #finds what to search for in Google Drive API
+    yesterday = datetime.now() - timedelta(1) #uses today's date and the equivalent to one day to find yesterday's date
+    time = yesterday.strftime('%Y-%m-%d_LENSSTSL') #assembles time into a string for search
+    return time #end result
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
+SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'] #limits what email can do on google drive
 
-def getFileNames():
+def getFileNames(): #API search for yesterday's files
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -56,7 +45,7 @@ def getFileNames():
 
     # Call the Drive v3 API
     results = service.files().list(
-        q="name contains '{0}'".format(getSearchQuery()), spaces='drive', fields="nextPageToken, files(id, name)").execute()
+        q="name contains '{0}'".format(getSearchQuery()), spaces='drive', fields="nextPageToken, files(id, name)").execute() # searches API: search query input into q
     items = results.get('files', [])
 
     if not items:
@@ -64,21 +53,34 @@ def getFileNames():
     else:
         outcome = ""
         for item in items:
-            outcome = outcome + "{0} ({1})".format(item['name'], item['id']) + ","
+            outcome = outcome + str(item['name']) + "," # returns a list of all files found
 
     return outcome
 
-def sendStatus():
+def sendStatus(): # sends email
     message = """\
     Subject: Daily Status Report
 
     The following data files were added to the LENSS Drive today:
-    {0}""".format(getFileNames())
+    {0}""".format(getFileNames()) # what will be sent out
 
-    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-        server.login(sender, password)
-        for address in receivers:
-            server.sendmail(sender, address, message)
+    #Email_FilePathName = sys.argv[1] #reads 2nd argument to find file containing email and mailing list information
+    #readEmail = configparser.ConfigParser()
+    #readEmail.read(Email_FilePathName)
+
+    password = getpass() #obscured input for password
+    sender = 'lenss@glaseducation.org'
+    receivers = ['joe@glaseducation.org', 'adam@glaseducation.org']
+
+    smtp_server = smtplib.SMTP("smtp.gmail.com", 587)
+    smtp_server.ehlo()
+    smtp_server.starttls()
+    smtp_server.ehlo
+    smtp_server.login(sender, password)
+    for i in range(len(receivers)):
+        print(receivers[i])
+        smtp_server.sendmail(sender, receivers[i], message)
+    smtp_server.close()
  
 if __name__ == '__main__':
     sendStatus()
