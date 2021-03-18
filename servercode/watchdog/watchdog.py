@@ -34,6 +34,7 @@ from getpass import getpass
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'] #limits what email can do on google drive
 tokenfile = 'token.json'
 credentialsfile = 'credentials.json'
+emailpassword = os.getenv('LENSS_EMAIL_PASSWORD')
 
 #### Function Definitions
 
@@ -104,7 +105,10 @@ def sendStatus():
     #readEmail.read(Email_FilePathName)
 
     # Define email credentials
-    password = getpass() #obscured input for password
+    if emailpassword:
+        password = emailpassword
+    else:
+        password = getpass() #obscured input for password
     sender = 'lenss@glaseducation.org'
     receivers = ['joe@glaseducation.org', 'adam@glaseducation.org']
 
