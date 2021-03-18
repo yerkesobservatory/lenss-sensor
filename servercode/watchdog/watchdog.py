@@ -1,10 +1,12 @@
 """ WATCHDOG
     ========
     
-    This is the watchdog program for the LENS SENSOR project.
+    This is the watchdog program for the LENSS SENSOR project.
     
     The program does the following:
-    JOE WRITE HERE WHAT THE PROGRAM DOES AND WHICH TECHNOLOGIES IT USES
+    Generates a search query based on yesterday's date
+    Navigates the Google Drive API and finds data files created yesterday
+    Emails the names of all matching files to Adam and Joe
     
     Authors: Joe Murphy
 """
