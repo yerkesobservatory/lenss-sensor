@@ -33,8 +33,8 @@ from getpass import getpass
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'] #limits what email can do on google drive
 tokenfile = 'token.json'
-credentialsfile = 'credentials.json'
-emailpassword = os.getenv('LENSS_EMAIL_PASSWORD')
+credentialsfile = sys.argv[1]
+#emailpassword = os.getenv('LENSS_EMAIL_PASSWORD')
 
 #### Function Definitions
 
@@ -100,9 +100,11 @@ def sendStatus():
     The following data files were added to the LENSS Drive today:
     {0}""".format(getFileNames()) # what will be sent out
 
-    #Email_FilePathName = sys.argv[1] #reads 2nd argument to find file containing email and mailing list information
-    #readEmail = configparser.ConfigParser()
-    #readEmail.read(Email_FilePathName)
+    Email_FilePathName = sys.argv[2] #reads 3rd argument to find file containing email and mailing list information
+    readEmail = configparser.ConfigParser()
+    readEmail.read(Email_FilePathName)
+
+    emailpassword = readEmail['login']['pw']
 
     # Define email credentials
     if emailpassword:
