@@ -17,7 +17,7 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 import numpy as np
 
-fmt = ['%.2f','%.0f','%.2f','%.1f','%.1f']
+fmt = ['%.2f','%.2f','%.1f']
 dltd = 0
 ldltd = 0
 starttime = datetime.now().strftime("%H:%M:%S, %Y-%m-%d")
@@ -30,7 +30,7 @@ def getardport(config):
         return config['arddatalogger']['arduinoport']
     except:
         exit(1)
-        
+
 ### Main program
 
 if len(sys.argv) < 2:
@@ -67,7 +67,7 @@ else:
                               bytesize=serial.EIGHTBITS,\
                               timeout=5)
     ser.readline()
-        
+
 def serialread(config):
     """ Read the serial value from the arduino and writes
         it to the file.
@@ -78,12 +78,7 @@ def serialread(config):
     global ldltd
     global starttime
 
-    lvolt = []
-    hz = []
-    tvolt = []
-    tFahr = []
-    tCels = []
-    sl = [[] for i in range(5)]
+    sl = [[] for i in range(3)]
     last = time.gmtime().tm_sec
 
     while True:
@@ -105,38 +100,36 @@ def serialread(config):
             read_fmtd = read_ser.decode("utf-8")
         else:
             read_fmtd = config['arddatalogger']['simardline']
+
         # Read data from string
         sdata = read_fmtd.split(",")
         print(sdata)
-        if (len(sdata) == 5):
-            sdata[4].strip()
-            #print(sdata+["Seconds"]) #Testing by second while distinguishing from minutely data
-            try:
-                for i in range(len(sdata)):
-                    sl[i].append(float(sdata[i]))
-            except:
-                dltd+=1
-        else:
+        del sdata[-1]
+        try:
+            for i in range(len(sdata)):
+                sl[i].append(float(sdata[i]))
+        except:
             dltd+=1
         print(time.gmtime().tm_sec)
         last = time.gmtime().tm_sec
 
+    # Compile text for file
     read_timed = []
     read_timed.append(timestring)
     read_timed += sl
+    read_timed.append(config['arddatalogger']['ID'])
     text_timed = ",".join(read_timed)
-    #print(read_timed)
     print(text_timed)
     print(str(dltd) + " pieces of data deleted")
     # Make filename
     fname = now.strftime(config['arddatalogger']['outfilename'])
     # Save to file
-    log = open(fname, 'at')
-    log.write(text_timed+"\r\n")
+    data = open(fname, 'at')
+    data.write(text_timed+"\r\n")
     if (dltd-ldltd >= 100):
         logger.info(str(dltd)+" lines deleted since "+starttime+"\r\n")
         ldltd = dltd
-    log.close()
+    data.close()
     logger.info('Connected to:' + str(getardport(config)))
     logger.info('Read data line')
 
