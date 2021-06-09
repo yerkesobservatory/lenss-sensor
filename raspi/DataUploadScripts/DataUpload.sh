@@ -24,7 +24,7 @@ drive=$3
 # their appropriate location.
 for output in $(find "$inputDir" -type f -printf '%T+;%p\n' | sed "/$(date +%Y-%m-%d)/d")
 do
-    date=$(echo $output | awk -F ";" '{print substr($1,0,10)}')
+    date=$(echo $output | awk -F ";" '{print substr($1,0,8)}')
     monthNum=$(echo $date | awk '{print substr($1,6,2)}')
     month=$(grep $monthNum ./monthLookup | awk '{print $2}')
     fileName=$(echo $output | awk -F ";" '{print $2}')
