@@ -95,7 +95,8 @@ def serialread(config):
             break
         # Read value from Arduino
         if ser:
-            read_ser=ser.readline()
+            while(ser.in_waiting):
+                read_ser=ser.readline()
             #print(repr(read_ser))
             read_fmtd = read_ser.decode("utf-8")
         else:
