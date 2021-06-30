@@ -95,6 +95,7 @@ def serialread(config):
             break
         # Read value from Arduino
         if ser:
+            read_ser=""
             while(ser.in_waiting):
                 read_ser=ser.readline()
             #print(repr(read_ser))
