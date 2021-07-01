@@ -126,7 +126,7 @@ def serialread(config):
         read_timed.append(config['arddatalogger']['ID'])
         text_timed = ",".join(read_timed)
         # Same as before; if third argument is 'show' it will print outputs; otherwise it remains in background
-        if(sys.argv == 'show'):
+        if(sys.argv[2] == 'show'):
             print(text_timed)
             print(str(dltd) + " pieces of data deleted")
         # Make filename
