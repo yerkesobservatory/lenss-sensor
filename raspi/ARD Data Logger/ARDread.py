@@ -24,8 +24,7 @@ starttime = datetime.now().strftime("%H:%M:%S, %Y-%m-%d")
 
 ### Function Definitions
 def getardport(config):
-    """ Returns the port string for the arduino
-    """
+    # Returns the port string for the arduino
     try:
         return config['arddatalogger']['arduinoport']
     except:
@@ -69,73 +68,81 @@ else:
     ser.readline()
 
 def serialread(config):
-    """ Read the serial value from the arduino and writes
+    try:
+        """ Read the serial value from the arduino and writes
         it to the file.
-    """
-    time.sleep(1)
+        """
+        time.sleep(1)
 
-    global dltd
-    global ldltd
-    global starttime
+        global dltd
+        global ldltd
+        global starttime
 
-    sl = [[] for i in range(3)]
-    last = time.gmtime().tm_sec
-
-    while True:
-        time.sleep(2)
-        now=datetime.now()
-
-        #timestring=str(tim[3])+":"+str(tim[4])+":"+str(tim[5])+", "
-        timestring=now.strftime("%H:%M:%S")
-        if (last > time.gmtime().tm_sec):
-            for l in range(len(sl)):
-                sl[l].sort()
-                sl[l] = sl[l][len(sl[l])//5:-(len(sl[l])//5)]
-                sl[l]=fmt[l] % np.mean(sl[l])
-            break
-        # Read value from Arduino
-        if ser:
-            read_ser=""
-            while(ser.in_waiting):
-                read_ser=ser.readline()
-            #print(repr(read_ser))
-            read_fmtd = read_ser.decode("utf-8")
-        else:
-            read_fmtd = config['arddatalogger']['simardline']
-
-        # Read data from string
-        sdata = read_fmtd.split(",")
-        print(sdata)
-        del sdata[-1]
-        try:
-            for i in range(len(sdata)):
-                sl[i].append(float(sdata[i]))
-        except:
-            dltd+=1
-        print(time.gmtime().tm_sec)
+        sl = [[] for i in range(3)]
         last = time.gmtime().tm_sec
 
-    # Compile text for file
-    read_timed = []
-    read_timed.append(timestring)
-    read_timed += sl
-    read_timed.append(config['arddatalogger']['ID'])
-    text_timed = ",".join(read_timed)
-    print(text_timed)
-    print(str(dltd) + " pieces of data deleted")
-    # Make filename
-    fname = now.strftime(config['arddatalogger']['outfilename'])
-    # Save to file
-    data = open(fname, 'at')
-    data.write(text_timed+"\r\n")
-    if (dltd-ldltd >= 100):
-        logger.info(str(dltd)+" lines deleted since "+starttime+"\r\n")
-        ldltd = dltd
-    data.close()
-    logger.info('Connected to:' + str(getardport(config)))
-    logger.info('Read data line')
+        while True:
+            time.sleep(2)
+            now=datetime.now()
 
-while True:
+            #timestring=str(tim[3])+":"+str(tim[4])+":"+str(tim[5])+", "
+            timestring=now.strftime("%H:%M:%S")
+            if (last > time.gmtime().tm_sec):
+                for l in range(len(sl)):
+                    sl[l].sort()
+                    sl[l] = sl[l][len(sl[l])//5:-(len(sl[l])//5)]
+                    sl[l]=fmt[l] % np.mean(sl[l])
+                break
+            # Read value from Arduino
+            if ser:
+                read_ser=""
+                while(ser.in_waiting):
+                    read_ser=ser.readline()
+                #print(repr(read_ser))
+                read_fmtd = read_ser.decode("utf-8")
+            else:
+                read_fmtd = config['arddatalogger']['simardline']
 
+            # Read data from string
+            sdata = read_fmtd.split(",")
+            del sdata[-1]
+            try:
+                for i in range(len(sdata)):
+                    sl[i].append(float(sdata[i]))
+            except:
+                dltd+=1
+            # Checks third parameter of command starting code (first is program location, second is config location)
+            # If the third parameter exists and is named 'show', each line of data will be presented to the user to check the status of the code
+            # Omitting 'show' keeps screens clear so code may run in background
+            if(sys.argv[2] == 'show'):
+                print(sdata)
+                print(time.gmtime().tm_sec)
+            last = time.gmtime().tm_sec
+
+        # Compile text for file
+        read_timed = []
+        read_timed.append(timestring)
+        read_timed += sl
+        read_timed.append(config['arddatalogger']['ID'])
+        text_timed = ",".join(read_timed)
+        # Same as before; if third argument is 'show' it will print outputs; otherwise it remains in background
+        if(sys.argv == 'show'):
+            print(text_timed)
+            print(str(dltd) + " pieces of data deleted")
+        # Make filename
+        fname = now.strftime(config['arddatalogger']['outfilename'])
+        # Save to file
+        data = open(fname, 'at')
+        data.write(text_timed+"\r\n")
+        if (dltd-ldltd >= 100):
+            logger.info(str(dltd)+" lines deleted since "+starttime+"\r\n")
+            ldltd = dltd
+        data.close()
+        logger.info('Connected to:' + str(getardport(config)))
+        logger.info('Read data line')
+    except:
+        time.sleep(1)
+
+while(True):
     serialread(config)
     #time.sleep(1)
