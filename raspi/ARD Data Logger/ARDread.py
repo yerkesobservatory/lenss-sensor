@@ -115,8 +115,8 @@ def serialread(config):
             # If the third parameter exists and is named 'show', each line of data will be presented to the user to check the status of the code
             # Omitting 'show' keeps screens clear so code may run in background
             #if(sys.argv[2] == 'show'):
-            #    print(sdata)
-            #    print(time.gmtime().tm_sec)
+            print(sdata)
+            print(time.gmtime().tm_sec)
             last = time.gmtime().tm_sec
 
         # Compile text for file
@@ -127,8 +127,8 @@ def serialread(config):
         text_timed = ",".join(read_timed)
         # Same as before; if third argument is 'show' it will print outputs; otherwise it remains in background
         #if(sys.argv[2] == 'show'):
-        #    print(text_timed)
-        #    print(str(dltd) + " pieces of data deleted")
+        print(text_timed)
+        print(str(dltd) + " pieces of data deleted")
         # Make filename
         fname = now.strftime(config['arddatalogger']['outfilename'])
         # Save to file
