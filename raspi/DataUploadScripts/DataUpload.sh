@@ -6,15 +6,15 @@
 # and then uploads them to Google Drive.
 #
 # @param $1 full path to directory containing sensor files. No trailing "/".
-# Defaults to '/home/pi/SensorData'
+# Defaults to '/home/pi/Local/sensorsdata'
 # @param $2 full path to dirictory containing archived sensor files. No trailing "/".
-# Defaults to '/home/pi/SensorDataArchive'
+# Defaults to '/home/pi/Local/SensorDataArchive'
 # @param $3 name of rclone location to use. Defaults to 'GLAS'
 
 inputDir=$1
-[ -z "inputDir" ] && inputDir="/home/pi/SensorData"
+[ -z "inputDir" ] && inputDir="/home/pi/Local/sensorsdata"
 archiveDir=$2
-[ -z "archiveDir" ] && archiveDir="/home/pi/SensorDataArchive"
+[ -z "archiveDir" ] && archiveDir="/home/pi/Local/SensorDataArchive"
 drive=$3
 [ -z "drive" ] && drive="GLAS"
 
