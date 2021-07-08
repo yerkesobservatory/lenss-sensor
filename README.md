@@ -14,8 +14,9 @@ This project contains code and documentation for the LENSS-Sensor being develope
     * ARD Data Logger: programs related to reading data from the arduino
       * ARDread.py: used to store data collected from the Arduino reads the serial port connected to arduino, samples data over the course of a minute, removes outliers and takes the mean to produce average data for the minute, and  stores the finalized data in a file
     * DataUploadScripts: uploads data files to the LENSS Google Drive
-    * Initialization: single-use programs to assist in initial configuration of sensors
+    * Reconfiguration: bash programs that alter config files and pathways on a pi
       * lenss-start.sh: bash script that generates local data and logging folders as well as tailoring config pathways to the specific sensor's id number
+      * setport.sh: program that isolates the port the sensor is connected to and writes it to config
     * SQM Data Logger: programs used for manipulating and storing data received by an SQM-LU
       * SQM_LU_LOGGER.py: reads and stores data from the SQM-LU in a similar fashion to ARDread.py
   * server: programs operated on the central LENSShost server
