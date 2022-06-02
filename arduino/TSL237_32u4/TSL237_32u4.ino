@@ -67,7 +67,7 @@ void loop() //loop is the other special function of arduinos; it repeats indefin
     t = cnt; //because interrupt is incredibly fast, t stores the count right when the reading is taken
     hz = round((t - oldcnt)*1000/(T-Tlast)); //takes photon counts and puts them in Hz (#/s)
     oldcnt = t; //remembers last count to calculate Hz next loop
-    message = String(volt)+","+String(hz)+","+String(sensors.getTempCByIndex(0))+","+
+    message = String(sensors.getTempCByIndex(0))+";"+String(hz)+";"+String(volt)+";"+
               String(TSLserialNR);
     Serial.println(message); //assembles message and sends it to the pi
     Tlast = T;

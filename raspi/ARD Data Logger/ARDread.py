@@ -11,11 +11,12 @@ import time
 from datetime import datetime
 import serial.tools.list_ports
 import configparser
-import  os
+import os
 import sys
 import logging
 from logging.handlers import TimedRotatingFileHandler
 import numpy as np
+import pytz
 
 # fmt represents the number of decimal places each data point shows
 fmt = ['%.2f','%.2f','%.1f']
@@ -65,12 +66,12 @@ if int(config['arddatalogger']['simarduino']):
     # We are simulating the arduino set serial to null
     ser = None
 else:
-    ser  =  serial . Serial ( port=getardport(config),\
-                              baudrate=9600,\
-                              parity=serial.PARITY_NONE,\
-                              stopbits=serial.STOPBITS_ONE,\
-                              bytesize=serial.EIGHTBITS,\
-                              timeout=5)
+    ser = serial.Serial( port=getardport(config),\
+                         baudrate=9600,\
+                         parity=serial.PARITY_NONE,\
+                         stopbits=serial.STOPBITS_ONE,\
+                         bytesize=serial.EIGHTBITS,\
+                         timeout=5 )
     ser.readline()
 
 def serialread(config):
@@ -89,8 +90,7 @@ def serialread(config):
 
         while True:
             time.sleep(2)
-            now=datetime.now()
-            timestring=now.strftime("%H:%M:%S")
+            timestamp=time.time()
 
             # When entering a new minute (marked by the seconds decreasing after a loop from 58 to 01 or 59 to 02 or so on)
             # the data gathered is sorted from least to greatest, the top and bottom fifths of it are removed to get rid of
@@ -111,7 +111,7 @@ def serialread(config):
                 read_fmtd = config['arddatalogger']['simardline']
 
             # Read data from string and tracks the number of deleted data points
-            sdata = read_fmtd.split(",")
+            sdata = read_fmtd.split(";")
             del sdata[-1]
             try:
                 for i in range(len(sdata)):
@@ -124,14 +124,15 @@ def serialread(config):
 
         # Compile text for file
         read_timed = []
-        read_timed.append(timestring)
+        read_timed.append(datetime.utcfromtimestamp(timestamp).isoformat(sep='T', timespec='milliseconds'))
+        read_timed.append(datetime.fromtimestamp(timestamp, pytz.timezone('US/Central')).isoformat(sep='T', timespec='milliseconds')[:-6])
         read_timed += sl
         read_timed.append(config['arddatalogger']['ID'])
-        text_timed = ",".join(read_timed)
+        text_timed = ";".join(read_timed)
         print(text_timed)
         print(str(dltd) + " pieces of data deleted")
         # Make filename
-        fname = now.strftime(config['arddatalogger']['outfilename'])
+        fname = datetime.fromtimestamp(timestamp, pytz.timezone('US/Central')).strftime(config['arddatalogger']['outfilename'])
         # Save to file
         data = open(fname, 'at')
         data.write(text_timed+"\r\n")
