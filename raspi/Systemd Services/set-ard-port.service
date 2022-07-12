@@ -1,0 +1,13 @@
+[Unit]
+Description=Set Arduino port for lenss-collect.service
+
+[Service]
+User=pi
+KillMode=process
+KillSignal=SIGKILL
+Type=simple
+ExecStart=/home/pi/Programs/setport.sh
+
+[Install]
+WantedBy=multi-user.target
+RequiredBy=lenss-collect.service

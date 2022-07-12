@@ -1,0 +1,15 @@
+[Unit]
+Description=Arduino data collection program
+Requires=set-ard-port.service
+
+[Service]
+After=set-ard-port.service
+User=pi
+KillMode=process
+KillSignal=SIGTERM
+Type=simple
+ProtectHome=false
+ExecStart=/usr/bin/python3 /home/pi/Programs/ARDread.py /home/pi/Programs/serverconfig.ini
+
+[Install]
+WantedBy=multi-user.target
