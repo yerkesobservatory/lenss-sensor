@@ -15,10 +15,13 @@ This project contains code and documentation for the LENSS-Sensor being develope
       * ARDread.py: used to store data collected from the Arduino reads the serial port connected to arduino, samples data over the course of a minute, removes outliers and takes the mean to produce average data for the minute, and  stores the finalized data in a file
     * DataUploadScripts: uploads data files to the LENSS Google Drive
     * Reconfiguration: bash programs that alter config files and pathways on a pi
-      * lenss-start.sh: bash script that generates local data and logging folders as well as tailoring config pathways to the specific sensor's id number
+      * config.sh: bash script that generates local data folder as well as tailoring config pathways to the specific sensor's id number
       * setport.sh: program that isolates the port the sensor is connected to and writes it to config
     * SQM Data Logger: programs used for manipulating and storing data received by an SQM-LU
       * SQM_LU_LOGGER.py: reads and stores data from the SQM-LU in a similar fashion to ARDread.py
+    * Systemd Services
+      * set-ard-port.service: Runs setport.sh on system startup
+      * lenss-collect.service: Starts ARDread.py on system startup after set-ard-port.service
   * server: programs operated on the central LENSShost server
     * watchdog: programs used for the monitoring of sensor operations
       * watchdog.py: accesses LENSS Google Drive folder to record which sensors uploaded the previous night; this record is the emailed to developers on the program's mailing list
