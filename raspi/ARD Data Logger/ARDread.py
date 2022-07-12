@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """ LENSS ARDUINO Read Program ==========================
 
 This program reads data from the Arduino that
