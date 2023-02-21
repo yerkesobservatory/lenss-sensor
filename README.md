@@ -8,7 +8,7 @@ This project contains code and documentation for the LENSS-Sensor being develope
      * serverconfig.ini: the standard serverconfig file holds port and filename data for both the arduino and SQM-LU, has a dummy line of data used when experimenting with how the pi's programs affect data, and directs to a log monitoring the status of connected devices
     * There are additional serverconfigs for certain sensors or people such as serverconfigMGB.ini (Marc's serverconfig file)
   * arduino: code used for the operation of sensors via arduino:
-    * TSL237_Uno.ino: the current program used for the arduino in Sensor0001; when dark enough, it interrupts all current processes to update a count when light hits the tsl and prints luminosity alongside temperature data 
+    * TSL237_Uno.ino: the current program used for the arduino in Sensor0001; when dark enough, it interrupts all current processes to update a count when light hits the tsl and prints luminosity alongside temperature data
     * TSL237_32u4: the most recent version of the program; performs identical functions to the Uno but is redesigned for the hardware constraints of a feather 32u4
   * raspi: programs used for manipulating and storing data received by the sensor
     * ARD Data Logger: programs related to reading data from the arduino
