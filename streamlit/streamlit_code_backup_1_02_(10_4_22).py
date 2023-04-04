@@ -313,9 +313,9 @@ if goal_line:
 if hour_labels:
     if custom_y <= 10:
         hour_labels_y = -0.5
-    if custom_y < 30 and custom_y > 10:
+    if 30 > custom_y > 10:
         hour_labels_y = -1
-    if custom_y >= 30 and custom_y <= 85:
+    if 30 <= custom_y <= 85:
         hour_labels_y = -3
     if custom_y > 85:
         hour_labels_y = -4
@@ -342,7 +342,7 @@ if hour_labels:
             Midnight_PM = Midnight_PM - 1
         PM_Label_Loop = PM_Label_Loop - 60
         Midnight_PM = Midnight_PM - 1
-        if PM_Label_Loop > 0 and PM_Label_Loop < list(custom_x)[1]:
+        if 0 < PM_Label_Loop < list(custom_x)[1]:
             plt.text(
                 PM_Label_Loop, hour_labels_y, "\ " + str(Midnight_PM) + " PM"
             )
@@ -354,7 +354,7 @@ if hour_labels:
             Midnight_AM = Midnight_AM + 1
         AM_Label_Loop = AM_Label_Loop + 60
         Midnight_AM = Midnight_AM + 1
-        if AM_Label_Loop > 0 and AM_Label_Loop < list(custom_x)[1]:
+        if 0 < AM_Label_Loop < list(custom_x)[1]:
             plt.text(
                 AM_Label_Loop, hour_labels_y, "\ " + str(Midnight_AM) + " AM"
             )
@@ -567,7 +567,7 @@ if custom_y < mean + 2 and meandisplay:
 if custom_y > mean + 2 and meandisplay:
     st.success("Graph Created Successfully!")
 
-if meandisplay == False:
+if not meandisplay:
     st.success("Graph Created Successfully!")
 
 # Creates variable names for the temperature to be displayed later
