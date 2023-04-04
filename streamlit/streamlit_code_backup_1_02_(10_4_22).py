@@ -189,9 +189,8 @@ night = Frequency_Night + Frequency_Morning
 # Detects which sensor was selected, and then removes it from the list so
 # duplicates are not visible on the overlay
 sensor_options = ["Sensor 5", "Sensor 11", "Sensor 12"]
-for word in list(sensor_options):
-    if word in sensor_selection:
-        sensor_options.remove(word)
+for word in [w for w in list(sensor_options) if w in sensor_selection]:
+    sensor_options.remove(word)
 
     # Graph customization, variable names make it self-explanatory
 with st.sidebar:
