@@ -91,7 +91,7 @@ night_error = False
 if filetype == "New":
     try:
         sensor = pandas.read_csv(
-            "files/" + filename + ".txt",
+            ".files/" + filename + ".txt",
             sep=";",
             names=[
                 "UTC",
@@ -106,7 +106,7 @@ if filetype == "New":
         morning_error = True
     try:
         sensor2 = pandas.read_csv(
-            "files/" + filename2 + ".txt",
+            ".files/" + filename2 + ".txt",
             sep=";",
             names=[
                 "UTC",
@@ -122,14 +122,14 @@ if filetype == "New":
 else:
     try:
         sensor = pandas.read_csv(
-            "files/" + filename + ".txt",
+            ".files/" + filename + ".txt",
             names=["Time", "Voltage", "Frequency", "Temperature", "Sensors"],
         )
     except:
         morning_error = True
     try:
         sensor2 = pandas.read_csv(
-            "files/" + filename2 + ".txt",
+            ".files/" + filename2 + ".txt",
             names=["Time", "Voltage", "Frequency", "Temperature", "Sensors"],
         )
     except:
@@ -369,7 +369,7 @@ if overlay_toggle == "Allow Overlay":
 
     try:
         addition1night = pandas.read_csv(
-            "files/"
+            ".files/"
             + (str(day_selection) + "_LENSSTSL00" + additional_sensor_number)
             + ".txt",
             names=["Time", "Voltage", "Frequency", "Temperature", "Sensors"],
@@ -378,7 +378,7 @@ if overlay_toggle == "Allow Overlay":
         night_error = True
     try:
         addition1morning = pandas.read_csv(
-            "files/"
+            ".files/"
             + (
                     str(morning_selection)
                     + "_LENSSTSL00"
@@ -394,7 +394,7 @@ if overlay_toggle == "Allow Overlay":
         additional_sensor_number = "12"
         try:
             addition1night = pandas.read_csv(
-                "files/" + (str(day_selection) + "_LENSSTSL12") + ".txt",
+                ".files/" + (str(day_selection) + "_LENSSTSL12") + ".txt",
                 sep=";",
                 names=[
                     "UTC",
@@ -409,7 +409,7 @@ if overlay_toggle == "Allow Overlay":
             night_error = True
         try:
             addition1morning = pandas.read_csv(
-                "files/" + (str(morning_selection) + "_LENSSTSL12") + ".txt",
+                ".files/" + (str(morning_selection) + "_LENSSTSL12") + ".txt",
                 sep=";",
                 names=[
                     "UTC",
