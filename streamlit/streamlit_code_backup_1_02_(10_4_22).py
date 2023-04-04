@@ -63,6 +63,10 @@ day_selection = st.date_input(
 morning_selection = day_selection + timedelta(days=1)
 
 # Prepares variable names, depending on selection, for later
+# Format of data varies with sensor number 
+# Because the sensor saves data on a per day basis, 
+# two files need to be opened to gather data for one night
+# (evening data for the first and morning for the second).
 if sensor_selection == "Sensor 5":
     filename = str(day_selection) + "_LENSSTSL0005"
     filename2 = str(morning_selection) + "_LENSSTSL0005"
@@ -149,20 +153,24 @@ Temperature = sensor["Temperature"].to_list()
 Temperature2 = sensor2["Temperature"].to_list()
 
 # Finds the last 0 in the first file (for the night)
+# Last 0 marks astronomical twilight 
+# (last stage of dusk/beginning of night)
 last0 = len(Frequency) - 1
 while Frequency[last0] != 0:
     last0 = last0 - 1
 
 # In the event that there are zeros elsewhere in the data (ex. S5
-# 2022-08-08), moves it back 2 hours and restarts the process
-if last0 > len(Frequency[: len(Frequency) - 120]):
-    last0 = len(Frequency) - 120
+# 2022-08-08), moves it back 2 hours (120 minutes) and restarts the process
+hours2 = 120
+if last0 > len(Frequency[: len(Frequency) - hours2]):
+    last0 = len(Frequency) - hours2
     while Frequency[last0] != 0:
         last0 = last0 - 1
 
 Frequency_Night = Frequency[last0 + 1:]
 
 # Finds the first 0 in the second file (for the morning)
+# First 0 in the mornining is the beginning of dawn
 first0 = 240
 while Frequency2[first0] != 0:
     first0 = first0 + 1
@@ -172,14 +180,14 @@ Frequency_Morning = Frequency2[0: first0 - 1]
 # night/day half of the graph. It does so by finding a mean, and working its
 # way forward/backward from there, eliminating any part that is above the mean.
 
-morningmean = sum(Frequency_Morning[: len(Frequency_Morning) - 60]) / (
+morning_mean = sum(Frequency_Morning[: len(Frequency_Morning) - 60]) / (
         len(Frequency_Morning) - 60
 )
-while sum(Frequency_Night[:5]) / 5 > morningmean + 2:
+while sum(Frequency_Night[:5]) / 5 > morning_mean + 2:
     Frequency_Night = Frequency_Night[5:]
 while (
         sum(Frequency_Morning[
-            len(Frequency_Morning) - 5:]) / 5 > morningmean + 2
+            len(Frequency_Morning) - 5:]) / 5 > morning_mean + 2
 ):
     Frequency_Morning = Frequency_Morning[: len(Frequency_Morning) - 5]
 
@@ -518,7 +526,7 @@ if overlay_toggle == "Deny Overlay":
 if trendline:
     plt.plot(
         [0, len(night)],
-        [sum(Frequency_Night[:20]) / 20, morningmean],
+        [sum(Frequency_Night[:20]) / 20, morning_mean],
         color=trendline_color,
         linewidth=1.5,
     )
