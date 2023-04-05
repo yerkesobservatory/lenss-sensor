@@ -31,6 +31,8 @@ from datetime import datetime
 from datetime import timedelta
 from PIL import Image
 
+# ======= STREAMLIT PAGE SETUP =========
+
 # Page setup
 st.set_page_config(
     page_title="LENSS Sensor Plotting",
@@ -75,7 +77,7 @@ if sensor_selection == "Sensor 5":
 
 if sensor_selection == "Sensor 11":
     filename = str(day_selection) + "_LENSSTSL0011"
-    filename2 = filename2 = str(morning_selection) + "_LENSSTSL0011"
+    filename2 = str(morning_selection) + "_LENSSTSL0011"
     sensornumber = "11"
     filetype = "Old"
 
@@ -146,6 +148,8 @@ if night_error:
 if night_error or morning_error:
     st.stop()
 
+# ======= DATA MANIPULATION: setting boundaries for night ======
+
 # Sets up more variable names for later
 Frequency = sensor["Frequency"].to_list()
 Frequency2 = sensor2["Frequency"].to_list()
@@ -194,6 +198,8 @@ while (
 # List of all the useful data for the night
 night = Frequency_Night + Frequency_Morning
 
+# ====== STREAMLIT SETTINGS ======== 
+
 # Detects which sensor was selected, and then removes it from the list so
 # duplicates are not visible on the overlay
 sensor_options = ["Sensor 5", "Sensor 11", "Sensor 12"]
@@ -234,6 +240,8 @@ with st.sidebar:
     c_or_f = st.radio(
         "Read temperatures in Celsius of Fahrenheit?", ("Celsius", "Fahrenheit")
     )
+
+# ======= GRAPHING ========
 
 # Lets the user change the X-Axis and Y-Axis to whatever they like, so long
 # as it is actually within the graph, defaults to the length of the graph and
@@ -297,6 +305,8 @@ if timestamps:
             linewidth=2,
         )
 
+# ===== DATA ANALYSIS =======
+
 # When activated, adds a goal line to the graph by doing some totally complex
 # math
 if goal_line:
@@ -308,6 +318,8 @@ if goal_line:
         linewidth=2,
         label="Goal",
     )
+
+# ====== LABELING GRAPH AXES ========
 
 # Sets Y-Axis values for the text in hour_labels to make them easy to view
 if hour_labels:
@@ -358,6 +370,8 @@ if hour_labels:
             plt.text(
                 AM_Label_Loop, hour_labels_y, "\ " + str(Midnight_AM) + " AM"
             )
+
+# ======= OVERLAYING ADDITIONAL GRAPHS ======
 
 # Imports overlay files
 if overlay_toggle == "Allow Overlay":
@@ -560,7 +574,7 @@ plt.savefig(
 st.pyplot(fig)
 
 # Error/Success messages depending on if the mean could be safely displayed
-# without interfereing with the important data
+# without interfering with the important data
 if custom_y < mean + 2 and meandisplay:
     st.warning("Unable to safely display the mean!")
 
@@ -600,6 +614,8 @@ temperature_column3.metric(
     str(round((temp_max - temp_mean), 1)) + temp_unit,
 )
 
+# ======= SAVING GRAPH ==========
+
 # Creates a variable name with the file name (was saved earlier) in order for
 # download by the viewer
 image_name = (
@@ -620,6 +636,8 @@ with st.expander("View Raw Data"):
         sort=False,
     )
     st.dataframe(data=combined_sensor)
+
+# ========= MAPPING SENSOR LOCATIONS =========
 
 # Creates a map of where the sensors are located, randomizing the location by
 # + or - 0.001-9 degrees latitude and longitude ra stands for random, due to
