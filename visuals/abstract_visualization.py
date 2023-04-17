@@ -6,6 +6,7 @@
 
 from abc import ABC, abstractmethod
 
+
 class Visualization(ABC):
     """
     This abstract class is the one that all visualizations will be built on.
@@ -14,15 +15,15 @@ class Visualization(ABC):
     @abstractmethod
     def _import_files(self):
         """
-        This method pulls the relevant sensor data file for the given night 
-        and the following morning from Google Drive. 
+        This method pulls the relevant sensor data file for the given night
+        and the following morning from Google Drive.
         """
         pass
 
     @abstractmethod
     def _parse_data(self):
         """
-        This method cleans the data files and organizes it 
+        This method cleans the data files and organizes it
         with the relevant column names as a dataframe.
         """
         pass
@@ -38,8 +39,8 @@ class Visualization(ABC):
     @abstractmethod
     def _call_apis(self):
         """
-        This method pulls the relevant weather and moon phase data for each night 
-        from external APIs. 
+        This method pulls the relevant weather and moon phase data for each night
+        from external APIs.
         """
         pass
 
@@ -47,7 +48,6 @@ class Visualization(ABC):
     def create_visual(self):
         """
         This method takes the data from the _construct_data function and returns
-        a visual object as an HTML file. 
+        a visual object as an HTML file.
         """
         pass
-
