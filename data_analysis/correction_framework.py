@@ -1,6 +1,8 @@
-'''
+"""
 include library python-weather at https://github.com/null8626/python-weather
 include astropy and astroplan (useful interface for astropy)
+-> use `import python-weather` and `import astropy`, etc.
+-> setup a virtual environment and download packages via `pip install [package]`
 
 file1 = a file for some day (for evening values of a night)
 file2 = the file for the subsequent day (for the morning values of a night)
@@ -13,7 +15,7 @@ ensure desired time frame is present in the file
 if more than some percentage of entries is missing, report correction failure due to lack of data
 
 use python-weather to find weather and moon phase
--check the hourly forecast: if more than some percentage of the hours between sunset and 
+-check the hourly forecast: if more than some percentage of the hours between sunset and
 sunrise are some degree of cloudy, report correction failure due to weather
 -what to do with moon illumination besides record? adjust or invalidate data?
 
@@ -36,4 +38,4 @@ functions to follow afterwards:
 >>>eg. if a full moon artificially brightens by 25%, reduce each frequency by 25% to make it more accurate
 >>>possibly make it a general higher order function if python allows them?
 -todo: check preferred organization of struct to pass along and/or output to GDrive by data_viz
-'''
+"""
