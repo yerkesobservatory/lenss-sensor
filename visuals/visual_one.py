@@ -99,7 +99,9 @@ class Visual1(Visualization):
         This method pulls the relevant weather and moon phase data for each night
         from external APIs.
         """
-        api_url = f"https://api.open-meteo.com/v1/forecast?latitude={self.sensor_latitude}&longitude={self.sensor_longitude}&hourly=temperature_2m"
+        api_url = f"https://api.open-meteo.com/v1/forecast?latitude=" \
+                  f"{self.sensor_latitude}&longitude={self.sensor_longitude}" \
+                  f"&hourly=temperature_2m"
         response = requests.get(api_url)
         response.json()
 
@@ -123,7 +125,8 @@ class Visual1(Visualization):
         trace = go.Scatter(x=x, y=y, mode="lines")
         data = [trace]
         layout = go.Layout(
-            title=f'{df["Date"][0]} Sensor {self.sensor_number} Dark Sky Observation',
+            title=f'{df["Date"][0]} Sensor {self.sensor_number} Dark Sky '
+                  f'Observation',
             xaxis=dict(title="Time (UTC)"),
             yaxis=dict(title="Light Frequency"),
         )
