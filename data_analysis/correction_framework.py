@@ -3,15 +3,15 @@
 # include library python-weather at https://github.com/null8626/python-weather
 # might switch to a weather api?
 
-# include astropy and astroplan (astropy interface)
-import python_weather
+import astroplan
 import astropy
 import astropy.units as u
-from astropy.time import Time
-from astropy.coordinates import EarthLocation
 
-import astroplan
+# include astropy and astroplan (astropy interface)
+import python_weather
 from astroplan import Observer
+from astropy.coordinates import EarthLocation
+from astropy.time import Time
 
 Field = Enum("Field", ["TEMP", "FREQ", "VOLT"])
 
