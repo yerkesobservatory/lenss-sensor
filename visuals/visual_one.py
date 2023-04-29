@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import requests
 import datetime
-from datetime import date, timedelta
+from datetime import date, timedelta, time
 import matplotlib.pyplot as plt
 import plotly.graph_objs as go
 import plotly.offline as pyo
@@ -22,11 +22,11 @@ class Visual1(Visualization):
 
         self.sensor_number = sensor_number
 
-        self.morning_data, self.evening_data = self._import_files(), \
-                                            self._import_files()
+        self.morning_data, self.evening_data = self._import_files()
+        self._parse_data(self.morning_data)
+        self._parse_data(self.evening_data)
         
 
-    
     def _import_files(self):
         """
         This method pulls the relevant sensor data file for the given night 
@@ -57,8 +57,10 @@ class Visual1(Visualization):
         df["Day"] = df["Time (UTC)"].dt.day
         df["Month"] = df["Time (UTC)"].dt.month
         df["Year"] = df["Time (UTC)"].dt.year
-
         df["Date"] = df["Time (UTC)"].apply(lambda x: x.date())
+
+        df['Time (CST)'] = df['Time (CST)'].apply(lambda x: x.time())
+        df["Time (UTC)"] = df["Time (UTC)"].apply(lambda x: x.time())
 
 
     def _construct_data(self):
@@ -77,14 +79,14 @@ class Visual1(Visualization):
         response = requests.get(api_url)
         response.json()
 
-    def create_visual(self, df_morn, df_eve, t_start: datetime, t_end: datetime):
+    def create_visual(self, t_start: datetime, t_end: datetime):
         """
         This method takes the data from the _construct_data function and returns
         a visual object as an HTML file. 
         """
 
-        df_morn_inbounds = df_morn[df_morn["Time (UTC)"] < t_end]
-        df_eve_inbounds = df_eve[df_eve["Time (UTC)"] > t_start]
+        df_morn_inbounds = self.morning_data[self.morning_data["Time (UTC)"] < t_end]
+        df_eve_inbounds = self.evening_data[self.evening_data["Time (UTC)"] > t_start]
 
         df = pd.concat([df_eve_inbounds, df_morn_inbounds])
 
@@ -94,13 +96,16 @@ class Visual1(Visualization):
         # creating the line graph using plotly
         trace = go.Scatter(x=x, y=y, mode='lines')
         data = [trace]
-        layout = go.Layout(title=f'{df["Date"][0]} Sensor {self.sensor_number} Dark Sky Observation', xaxis=dict(title='Time (UTC)'), yaxis=dict(title='Light Frequency'))
+        layout = go.Layout(title=f'TEST Sensor {self.sensor_number} Dark Sky Observation', xaxis=dict(title='Time (UTC)'), yaxis=dict(title='Light Frequency'))
         fig = go.Figure(data=data, layout=layout)
         pyo.plot(fig, filename='line_graph.html')
 
 
 
 if __name__ == "__main__":
-    vis1 = Visual1("2022-08-27_LENSSTSL0008.txt", "2022-08-28_LENSSTSL0008.txt", 42.57, -88.542, 8)
-    vis1.create_visual()
+    vis1 = Visual1("2022-08-28_LENSSTSL0008.txt", "2022-08-29_LENSSTSL0008.txt", 42.57, -88.542, 8)
+    
+    t_start = time(22, 0, 0)
+    t_end = time(4, 0, 0)
+    vis1.create_visual(t_start, t_end)
 
