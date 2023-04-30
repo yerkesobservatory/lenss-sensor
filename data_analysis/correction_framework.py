@@ -1,9 +1,5 @@
 # -> setup a virtual environment and download packages via `pip install [package]`
 
-! pip3 install astroplan
-! pip3 install astropy
-# ! might by a jupyter only thing?
-
 import os
 
 # include library python-weather at https://github.com/null8626/python-weather
