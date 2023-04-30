@@ -1,9 +1,8 @@
-# -> setup a virtual environment and download packages via `pip install [package]`
-
 import os
 
 # include library python-weather at https://github.com/null8626/python-weather
 # might switch to a weather api?
+
 
 # include astropy and astroplan (astropy interface)
 from astroplan import Observer
