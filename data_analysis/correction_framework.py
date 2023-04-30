@@ -14,8 +14,6 @@ import astropy.units as u
 from astropy.coordinates import EarthLocation
 from astropy.time import Time
 
-Field = Enum("Field", ["TEMP", "FREQ", "VOLT"])
-
 class minute_record:
     def __init__(
         self,
@@ -55,13 +53,12 @@ class night_record:
         night_file: str,
         morning_date: Time,
         morning_file: str,
-        sensor_long: float
+        sensor_long: float,
         sensor_lat: float
         ):
             # let night and morning date include time as noon of their respective days
             # Format Reminders: time = Time('2015-06-16 12:00:00') for assignment,
             #                          2023-01-23T06:00:00.992 on file
-
             self.nightof = night_date
             self.morningof = morning_date
 
@@ -153,24 +150,23 @@ class night_record:
 
 
     # given a function on a float, updates all temperature, frequency, or voltage values
-    def apply_correction(self, field_to_update, funct):
-        match (field_to_update):
-            case TEMP:
+    def apply_correction(self, field_to_update: str, funct):
+            if field_to_update == "TEMP":
                 for rec in self.min_records:
                     rec.temperature = funct(rec.temperature)
-            case FREQ:
+            if field_to_update == "FREQ":
                 for rec in self.min_records:
                     rec.frequency = funct(rec.frequency)
-            case VOLT:
+            if field_to_update == "VOLT":
                 for rec in self.min_records:
                     rec.voltage = funct(rec.voltage)
-            case _:
+            else:
                 print("error: field not recognized/field should not be updated")
 
     # export night record to a new file
-    def export(self, filename: str):
+    def rec_export(self, filename: str):
         new_file = open(filename, "x")
-        if (self.valid_for_use == FALSE):
+        if (self.valid_for_use == False):
             new_file.write("INVALID\n")
             new_file.write(self.exclusion_reason)
         else:
@@ -211,13 +207,13 @@ class night_record:
         new_file.close()
 
     # import previously exported night record
-    def import(self, filename: str):
+    def rec_import(self, filename: str):
         #takes an already created object and updates it to imported values
         file = open(filename)
         p_str = file.readline()
         if p_str == "INVALID":
             # check if this is okay for str comp?
-            self.valid_for_use = FALSE
+            self.valid_for_use = False
             self.exclusion_reason = file.readline()
         else:
           # night date -- 2023-01-23 06:00:00.992
