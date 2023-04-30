@@ -1,16 +1,17 @@
 # -> setup a virtual environment and download packages via `pip install [package]`
 
-import os
+! pip3 install astroplan
+! pip3 install astropy
+# ! might by a jupyter only thing?
 
-# include astropy and astroplan (astropy interface)
-import astroplan
-import astropy
-import astropy.units as u
+import os
 
 # include library python-weather at https://github.com/null8626/python-weather
 # might switch to a weather api?
-import python_weather
+
+# include astropy and astroplan (astropy interface)
 from astroplan import Observer
+import astropy.units as u
 from astropy.coordinates import EarthLocation
 from astropy.time import Time
 
