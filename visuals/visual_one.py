@@ -101,7 +101,6 @@ class Visual1(Visualization):
         if not data:
             raise Exception("Cloud Data Couldn't be Found")
         
-
         times = [datetime.strptime(time, '%Y-%m-%dT%H:%M%f') for time in data["hourly"]["time"]]
         cloudcover = data["hourly"]["cloudcover"]
         
@@ -135,13 +134,6 @@ class Visual1(Visualization):
         x1 = df["Time (CST)"].apply(lambda x: x.time().replace(microsecond=0))
         y1 = df["Frequency"].rolling(5).mean()
         y2 = df["moon_illum"]
-
-        # creating the line graph using plotly
-        # trace = go.Scatter(x=x, y=y, mode='lines')
-        # data = [trace]
-        # layout = go.Layout(title=f'{self.evening_day} Sensor {self.sensor_number} Dark Sky Observation', xaxis=dict(title='Time (CST)'), yaxis=dict(title='Light Frequency'))
-        # fig = go.Figure(data=data, layout=layout)
-        # pyo.plot(fig, filename='line_graph.html')
 
         # Create the first trace object with its own y-axis
         trace1 = go.Scatter(x=x1, y=y1, mode='lines', name='Light Frequency', yaxis='y1')
@@ -182,7 +174,6 @@ class Visual1(Visualization):
 
         fig.update_xaxes(ticklabelstep=10)
 
-        
         # Plot the line graph
         pyo.plot(fig, filename='vis1.html')
 

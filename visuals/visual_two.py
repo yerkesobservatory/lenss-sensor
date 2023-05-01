@@ -146,20 +146,12 @@ class Visual2(Visualization):
         df1 = df1[(df1["Time (CST)"] >= t_start1) & (df1["Time (CST)"] <= t_end1)]
         df2 = df2[(df2["Time (CST)"] >= t_start2) & (df2["Time (CST)"] <= t_end2)]
         
-        
         x1 = df1["Time (CST)"].apply(lambda x: x.time().replace(microsecond=0))
         y1 = df1["Frequency"].rolling(5).mean()
         y2 = df2["Frequency"].rolling(5).mean()
 
         y3 = df1["Temperature"]
         y4 = df2["Temperature"]
-
-        # creating the line graph using plotly
-        # trace = go.Scatter(x=x, y=y, mode='lines')
-        # data = [trace]
-        # layout = go.Layout(title=f'{self.evening_day} Sensor {self.sensor_number} Dark Sky Observation', xaxis=dict(title='Time (CST)'), yaxis=dict(title='Light Frequency'))
-        # fig = go.Figure(data=data, layout=layout)
-        # pyo.plot(fig, filename='line_graph.html')
 
         # Create the first trace object with its own y-axis
         trace1 = go.Scatter(x=x1, y=y1, mode='lines', name=f'{self.evening_day1} Light Frequency', yaxis='y1')
@@ -206,7 +198,6 @@ class Visual2(Visualization):
 
         fig.update_xaxes(ticklabelstep=10)
 
-        
         # Plot the line graph
         pyo.plot(fig, filename='vis2.html')
 
