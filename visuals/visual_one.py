@@ -1,18 +1,20 @@
-from abstract_visualization import Visualization
-import pandas as pd
 import os
-import requests
-from datetime import datetime
-from datetime import date, timedelta, time
+from datetime import date, datetime, time, timedelta
+
+import astropy.units as astro_units
+import julian
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import plotly.graph_objs as go
 import plotly.offline as pyo
-from plotly.subplots import make_subplots
-import numpy as np
+import requests
 from astroplan import Observer
-import astropy.units as astro_units
 from astropy.time import Time
-import julian
+from plotly.subplots import make_subplots
+
+from abstract_visualization import Visualization
+
 
 class Visual1(Visualization):
     """

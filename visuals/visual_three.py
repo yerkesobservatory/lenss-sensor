@@ -1,14 +1,15 @@
-from abstract_visualization import Visualization
-import pandas as pd
 import os
-import requests
-from datetime import datetime
-from datetime import date, timedelta, time
+from datetime import date, datetime, time, timedelta
+
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import plotly.graph_objs as go
 import plotly.offline as pyo
+import requests
 from plotly.subplots import make_subplots
-import numpy as np
+
+from abstract_visualization import Visualization
 
 
 class Visual3(Visualization):
