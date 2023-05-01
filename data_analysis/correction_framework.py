@@ -2,8 +2,8 @@
 # might switch to a weather api?
 import os
 
-from astroplan import Observer
 import astropy.units as u
+from astroplan import Observer
 from astropy.coordinates import EarthLocation
 from astropy.time import Time
 
