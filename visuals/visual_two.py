@@ -16,7 +16,7 @@ from plotly.subplots import make_subplots
 from abstract_visualization import Visualization
 
 
-class Two_Nights(Visualization):
+class TwoNights(Visualization):
     """
     This file contains the functions for creating a graph that overlays 
     the light frequency and temperature data from a sensor from two different nights. 
@@ -314,7 +314,7 @@ class Two_Nights(Visualization):
 
 
 if __name__ == "__main__":
-    vis1 = Two_Nights(
+    vis1 = TwoNights(
         "2022-09-19_LENSSTSL0008.txt",
         "2022-09-20_LENSSTSL0008.txt",
         "2022-12-26_LENSSTSL0008.txt",

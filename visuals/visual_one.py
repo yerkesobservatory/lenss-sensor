@@ -16,11 +16,12 @@ from plotly.subplots import make_subplots
 from abstract_visualization import Visualization
 
 
-class LENSS_Plotter(Visualization):
+class LENSSPlotter(Visualization):
     """
-    This file contains the functions for creating a graph of the frequency of light
-    detected by a given sensor over the course of one night, along with moon illumination. 
-    Other info about sunrise/sunset, average cloud cover, and average temperature is included.
+    This file contains the functions for creating a graph of the frequency of
+    light detected by a given sensor over the course of one night, along with
+    moon illumination. Other info about sunrise/sunset, average cloud cover,
+    and average temperature is included.
     """
 
     def __init__(
@@ -252,7 +253,7 @@ class LENSS_Plotter(Visualization):
 
 
 if __name__ == "__main__":
-    vis1 = LENSS_Plotter(
+    vis1 = LENSSPlotter(
         "2022-10-11_LENSSTSL0008.txt",
         "2022-10-12_LENSSTSL0008.txt",
         42.57,

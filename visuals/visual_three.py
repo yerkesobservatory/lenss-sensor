@@ -12,7 +12,7 @@ from plotly.subplots import make_subplots
 from abstract_visualization import Visualization
 
 
-class Weekly_Average(Visualization):
+class WeeklyAverage(Visualization):
     """
     This file contains the functions for creating a graph of the average frequency of light
     detected by the sensor each week within a given time range, overlaid with data
@@ -200,5 +200,5 @@ class Weekly_Average(Visualization):
 
 
 if __name__ == "__main__":
-    vis3 = Weekly_Average("2022-8-23", "2023-1-23", 42.57, -88.542, 8)
+    vis3 = WeeklyAverage("2022-8-23", "2023-1-23", 42.57, -88.542, 8)
     vis3.create_visual()
