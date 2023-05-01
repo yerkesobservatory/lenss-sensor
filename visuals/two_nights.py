@@ -1,17 +1,13 @@
-import os
-from datetime import date, datetime, time, timedelta
+from datetime import datetime, time
 
 import astropy.units as astro_units
 import julian
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.offline as pyo
 import requests
 from astroplan import Observer
 from astropy.time import Time
-from plotly.subplots import make_subplots
 
 from abstract_visualization import Visualization
 

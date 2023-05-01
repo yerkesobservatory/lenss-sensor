@@ -1,13 +1,10 @@
-import os
-from datetime import date, datetime, time, timedelta
+from datetime import datetime, timedelta
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.offline as pyo
 import requests
-from plotly.subplots import make_subplots
 
 from abstract_visualization import Visualization
 
