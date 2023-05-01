@@ -12,9 +12,11 @@ from plotly.subplots import make_subplots
 from abstract_visualization import Visualization
 
 
-class Visual3(Visualization):
+class Weekly_Average(Visualization):
     """
-    This abstract class is the one that all visualizations will be built on.
+    This file contains the functions for creating a graph of the average frequency of light
+    detected by the sensor each week within a given time range, overlaid with data
+    on the weekly total snowfall in the area.
     """
 
     def __init__(
@@ -39,8 +41,9 @@ class Visual3(Visualization):
 
     def _import_files(self):
         """
-        This method pulls the relevant sensor data file(s) for the given night
-        and the following morning from Google Drive.
+        Based on the start and end date, this method pulls the sensor data text files
+        for every night in the given range from Google Drive and combines the data
+        into one dataframe.
         """
         folder = "../streamlit/files/"
 
@@ -193,9 +196,9 @@ class Visual3(Visualization):
             legend=dict(yanchor="top", y=0.99, xanchor="right", x=0.99)
         )
 
-        pyo.plot(fig, filename="vis3.html")
+        pyo.plot(fig, filename="Weekly_Average.html")
 
 
 if __name__ == "__main__":
-    vis3 = Visual3("2022-8-23", "2023-1-23", 42.57, -88.542, 8)
+    vis3 = Weekly_Average("2022-8-23", "2023-1-23", 42.57, -88.542, 8)
     vis3.create_visual()

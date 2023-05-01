@@ -16,9 +16,11 @@ from plotly.subplots import make_subplots
 from abstract_visualization import Visualization
 
 
-class Visual1(Visualization):
+class LENSS_Plotter(Visualization):
     """
-    This abstract class is the one that all visualizations will be built on.
+    This file contains the functions for creating a graph of the frequency of light
+    detected by a given sensor over the course of one night, along with moon illumination. 
+    Other info about sunrise/sunset, average cloud cover, and average temperature is included.
     """
 
     def __init__(
@@ -52,8 +54,8 @@ class Visual1(Visualization):
 
     def _import_files(self):
         """
-        This method pulls the relevant sensor data file for the given night
-        and the following morning from Google Drive.
+        Given the name of two files as strings, this method pulls the relevant sensor data text file 
+        for the given night and the following morning from Google Drive.
         """
         folder = "../streamlit/files/"
         file_path_morn = folder + self.morning_file
@@ -147,7 +149,7 @@ class Visual1(Visualization):
                     )
                 )
             )
-            - 2400000.5
+            - 2400000.5 # converting from Julian Date to MJD
             - (6 * (0.5 / 12))
         )
         sunset_standard_time = julian.from_jd(sunset_mjd_time, fmt="mjd")
@@ -246,11 +248,11 @@ class Visual1(Visualization):
         fig.update_xaxes(ticklabelstep=10)
 
         # Plot the line graph
-        pyo.plot(fig, filename="vis1.html")
+        pyo.plot(fig, filename="LENSS_Plotter.html")
 
 
 if __name__ == "__main__":
-    vis1 = Visual1(
+    vis1 = LENSS_Plotter(
         "2022-10-11_LENSSTSL0008.txt",
         "2022-10-12_LENSSTSL0008.txt",
         42.57,

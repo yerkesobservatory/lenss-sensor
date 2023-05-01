@@ -16,9 +16,10 @@ from plotly.subplots import make_subplots
 from abstract_visualization import Visualization
 
 
-class Visual2(Visualization):
+class Two_Nights(Visualization):
     """
-    This abstract class is the one that all visualizations will be built on.
+    This file contains the functions for creating a graph that overlays 
+    the light frequency and temperature data from a sensor from two different nights. 
     """
 
     def __init__(
@@ -309,11 +310,11 @@ class Visual2(Visualization):
         fig.update_xaxes(ticklabelstep=10)
 
         # Plot the line graph
-        pyo.plot(fig, filename="vis2.html")
+        pyo.plot(fig, filename="Two_Nights.html")
 
 
 if __name__ == "__main__":
-    vis1 = Visual2(
+    vis1 = Two_Nights(
         "2022-09-19_LENSSTSL0008.txt",
         "2022-09-20_LENSSTSL0008.txt",
         "2022-12-26_LENSSTSL0008.txt",
