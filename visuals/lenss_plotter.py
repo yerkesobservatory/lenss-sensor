@@ -51,8 +51,9 @@ class LENSSPlotter(Visualization):
 
     def _import_files(self):
         """
-        Given the name of two files as strings, this method pulls the relevant sensor data text file
-        for the given night and the following morning from Google Drive.
+        Given the name of two files as strings, this method pulls the
+        relevant sensor data text file for the given night and the following
+        morning from Google Drive.
         """
         folder = "../streamlit/files/"
         file_path_morn = folder + self.morning_file
@@ -81,7 +82,8 @@ class LENSSPlotter(Visualization):
         with the relevant column names as a dataframe.
         """
 
-        # Assuming the timestamp column is stored in a variable called "timestamp_str"
+        # Assuming the timestamp column is stored in a variable called
+        # "timestamp_str"
         timestamp_format = (
             "%Y-%m-%dT%H:%M:%S.%f"  # Define the format of the timestamp
         )
@@ -121,7 +123,14 @@ class LENSSPlotter(Visualization):
 
         Returns: dictionary of hours, cloud cover percentages
         """
-        api_url = f"https://archive-api.open-meteo.com/v1/archive?latitude={self.sensor_latitude}&longitude={self.sensor_longitude}&start_date={self.evening_day}&end_date={self.morning_day}&hourly=cloudcover&timezone=America%2FChicago"
+        api_url = (
+            f"https://archive-api.open-meteo.com/v1/archive"
+            f"?latitude={self.sensor_latitude}&"
+            f"longitude={self.sensor_longitude}"
+            f"&start_date={self.evening_day}"
+            f"&end_date={self.morning_day}&hourly=cloudcover"
+            f"&timezone=America%2FChicago"
+        )
         response = requests.get(api_url)
         data = response.json()
 
@@ -150,7 +159,7 @@ class LENSSPlotter(Visualization):
             - (6 * (0.5 / 12))
         )
         sunset_standard_time = julian.from_jd(sunset_mjd_time, fmt="mjd")
-        sunset_24time = sunset_standard_time.strftime(("%H:%M"))
+        sunset_24time = sunset_standard_time.strftime("%H:%M")
 
         sunrise_mjd_time = (
             float(
@@ -164,7 +173,7 @@ class LENSSPlotter(Visualization):
             - (6 * (0.5 / 12))
         )
         sunrise_standard_time = julian.from_jd(sunrise_mjd_time, fmt="mjd")
-        sunrise_24time = sunrise_standard_time.strftime(("%H:%M"))
+        sunrise_24time = sunrise_standard_time.strftime("%H:%M")
 
         return sunset_24time, sunrise_24time
 
@@ -201,7 +210,8 @@ class LENSSPlotter(Visualization):
 
         # Define the layout object with two y-axes
         layout = go.Layout(
-            title=f"{self.evening_day} Sensor {self.sensor_number} Dark Sky Observation",
+            title=f"{self.evening_day} Sensor {self.sensor_number} Dark Sky "
+            f"Observation",
             xaxis=dict(title="Time (CST)"),
             yaxis=dict(title="Light Frequency", side="left"),
             yaxis2=dict(
