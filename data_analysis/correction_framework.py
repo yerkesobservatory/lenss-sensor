@@ -1,10 +1,7 @@
-import os
-
 # include library python-weather at https://github.com/null8626/python-weather
 # might switch to a weather api?
+import os
 
-
-# include astropy and astroplan (astropy interface)
 from astroplan import Observer
 import astropy.units as u
 from astropy.coordinates import EarthLocation
