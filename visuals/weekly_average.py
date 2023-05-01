@@ -14,9 +14,9 @@ from abstract_visualization import Visualization
 
 class WeeklyAverage(Visualization):
     """
-    This file contains the functions for creating a graph of the average frequency of light
-    detected by the sensor each week within a given time range, overlaid with data
-    on the weekly total snowfall in the area.
+    This file contains the functions for creating a graph of the average
+    frequency of light detected by the sensor each week within a given time
+    range, overlaid with data on the weekly total snowfall in the area.
     """
 
     def __init__(
@@ -41,9 +41,9 @@ class WeeklyAverage(Visualization):
 
     def _import_files(self):
         """
-        Based on the start and end date, this method pulls the sensor data text files
-        for every night in the given range from Google Drive and combines the data
-        into one dataframe.
+        Based on the start and end date, this method pulls the sensor data
+        text files for every night in the given range from Google Drive and
+        combines the data into one dataframe.
         """
         folder = "../streamlit/files/"
 
@@ -145,7 +145,13 @@ class WeeklyAverage(Visualization):
         for week in weeks:
             curr_week = week.strftime("%Y-%m-%d")
             next_week = (week + timedelta(days=7)).strftime("%Y-%m-%d")
-            api_url = f"https://archive-api.open-meteo.com/v1/archive?latitude={self.sensor_latitude}&longitude={self.sensor_longitude}&start_date={curr_week}&end_date={next_week}&daily=snowfall_sum&timezone=America%2FChicago"
+            api_url = (
+                f"https://archive-api.open-meteo.com/v1/archive"
+                f"?latitude={self.sensor_latitude}&longitude="
+                f"{self.sensor_longitude}&start_date={curr_week}"
+                f"&end_date={next_week}&daily=snowfall_sum"
+                f"&timezone=America%2FChicago "
+            )
             response = requests.get(api_url)
             data = response.json()
 
@@ -182,7 +188,9 @@ class WeeklyAverage(Visualization):
 
         data = [trace1, trace2]
         layout = go.Layout(
-            title=f"{self.start_date} to {self.end_date}: Weekly Average Frequency of Sensor {self.sensor_number} Dark Sky Observations",
+            title=f"{self.start_date} to {self.end_date}: Weekly Average "
+            f"Frequency of Sensor {self.sensor_number} Dark Sky "
+            f"Observations",
             xaxis=dict(title="Week"),
             yaxis=dict(title="Average Light Frequency", side="left"),
             yaxis2=dict(

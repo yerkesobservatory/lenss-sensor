@@ -18,8 +18,9 @@ from abstract_visualization import Visualization
 
 class TwoNights(Visualization):
     """
-    This file contains the functions for creating a graph that overlays 
-    the light frequency and temperature data from a sensor from two different nights. 
+    This file contains the functions for creating a graph that overlays the
+    light frequency and temperature data from a sensor from two different
+    nights.
     """
 
     def __init__(

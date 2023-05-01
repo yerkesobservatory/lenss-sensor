@@ -55,7 +55,7 @@ class LENSSPlotter(Visualization):
 
     def _import_files(self):
         """
-        Given the name of two files as strings, this method pulls the relevant sensor data text file 
+        Given the name of two files as strings, this method pulls the relevant sensor data text file
         for the given night and the following morning from Google Drive.
         """
         folder = "../streamlit/files/"
@@ -150,7 +150,7 @@ class LENSSPlotter(Visualization):
                     )
                 )
             )
-            - 2400000.5 # converting from Julian Date to MJD
+            - 2400000.5  # converting from Julian Date to MJD
             - (6 * (0.5 / 12))
         )
         sunset_standard_time = julian.from_jd(sunset_mjd_time, fmt="mjd")
