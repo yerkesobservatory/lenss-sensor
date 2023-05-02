@@ -7,6 +7,7 @@ from astroplan import Observer
 from astropy.coordinates import EarthLocation
 from astropy.time import Time
 
+PROJECT_DATE_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
 class minute_record:
     def __init__(
@@ -38,7 +39,7 @@ class night_record:
         self.weather = 0
         self.min_records = []
         self.valid_for_use = False
-        self.exclusion_reason = "UNITINIALIZED"
+        self.exclusion_reason = "UNINITIALIZED"
 
     # initialize a night record from a raw data file
     def initialize(
@@ -82,51 +83,48 @@ class night_record:
 
         self.min_records = []
 
-        n_file = open(night_file)
-        transtr = n_file.readline()
-        while len(transtr) != 0:
-            data = transtr.split(";")
-            data[0] = data[0].replace("T", " ")
-            data[1] = data[1].replace("T", " ")
-            m_rec = minute_record(
-                Time(data[0]),
-                Time(data[1]),
-                data[2].float(),
-                data[3].float(),
-                data[4].float,
-                data[5],
-            )
-            if (
-                m_rec.local_time < self.sunset
-            ):  # unsure if this will work or if a special time comp function is needed
-                n_file.readline()
-                continue
-            self.min_records.append(m_rec)
+        with open(night_file) as n_file:
             transtr = n_file.readline()
-        n_file.close()
+            while len(transtr) != 0:
+                data = transtr.split(";")
+                data[0] = data[0].replace("T", " ")
+                data[1] = data[1].replace("T", " ")
+                m_rec = minute_record(
+                    Time(data[0]),
+                    Time(data[1]),
+                    data[2].float(),
+                    data[3].float(),
+                    data[4].float,
+                    data[5],
+                )
+                if (
+                    m_rec.local_time < self.sunset
+                ):  # unsure if this will work or if a special time comp function is needed
+                    n_file.readline()
+                    continue
+                self.min_records.append(m_rec)
+                transtr = n_file.readline()
 
-        m_file = open(morning_file)
-        transtr = m_file.readline()
-        while len(transtr) != 0:
-            data = transtr.split(";")
-            data[0] = data[0].replace("T", " ")
-            data[1] = data[1].replace("T", " ")
-            m_rec = minute_record(
-                Time(data[0]),
-                Time(data[1]),
-                data[2].float(),
-                data[3].float(),
-                data[4].float,
-                data[5],
-            )
-            if (
-                m_rec.local_time > self.sunrise
-            ):  # unsure if this will work or if a special time comp function is needed
-                m_file.readline()
-                break
-            self.min_records.append(m_rec)
+        with open(morning_file) as m_file:
             transtr = m_file.readline()
-        m_file.close()
+            while len(transtr) != 0:
+                data = transtr.split(";")
+                data[0] = data[0].replace("T", " ")
+                data[1] = data[1].replace("T", " ")
+                m_rec = minute_record(
+                    Time(data[0]),
+                    Time(data[1]),
+                    data[2].float(),
+                    data[3].float(),
+                    data[4].float,
+                    data[5],
+                )
+                if (
+                    m_rec.local_time > self.sunrise
+                ):  # unsure if this will work or if a special time comp function is needed
+                    break
+                self.min_records.append(m_rec)
+                transtr = m_file.readline()
 
         self.valid_for_use = True
         self.exclusion_reason = "None"
@@ -158,87 +156,66 @@ class night_record:
 
     # export night record to a new file
     def rec_export(self, filename: str):
-        new_file = open(filename, "x")
-        if self.valid_for_use == False:
-            new_file.write("INVALID\n")
-            new_file.write(self.exclusion_reason)
-        else:
-            # night date -- 2023-01-23 06:00:00.992
-            new_file.write(self.night_date.strptime("%Y-%m-%d %H:%M:%S.%f"))
-            new_file.write("\n")
-            # morning date
-            new_file.write(self.morning_date.strptime("%Y-%m-%d %H:%M:%S.%f"))
-            new_file.write("\n")
-            # sunrise
-            new_file.write(self.sunrise.strptime("%Y-%m-%d %H:%M:%S.%f"))
-            new_file.write("\n")
-            # sunset
-            new_file.write(self.sunset.strptime("%Y-%m-%d %H:%M:%S.%f"))
-            new_file.write("\n")
-            # twilight
-            new_file.write(
-                self.astronomical_twilight.strptime("%Y-%m-%d %H:%M:%S.%f")
-            )
-            new_file.write("\n")
-            # illumination
-            new_file.write(str(self.moon_illumination))
-            new_file.write("\n")
-            # weather
-            # unimplemented
+        with open(filename, "x") as new_file:
+            if not self.valid_for_use:
+                new_file.write("INVALID\n" + self.exclusion_reason)
+            else:
+                vals = [
+                    self.night_date.strptime(PROJECT_DATE_FORMAT),
+                    self.morning_date.strptime(PROJECT_DATE_FORMAT),
+                    self.sunrise.strptime(PROJECT_DATE_FORMAT),
+                    self.sunset.strptime(PROJECT_DATE_FORMAT),
+                    self.astronomical_twilight.strptime(PROJECT_DATE_FORMAT),
+                    str(self.moon_illumination) #weather unimplemented
+                ]
+                new_file.write("\n".join(vals) + "\n")
 
-            for rec in self.min_records:
-                new_file.write(
-                    rec.utc_timesunset.strptime("%Y-%m-%d %H:%M:%S.%f")
-                )
-                new_file.write(";")
-                new_file.write(rec.local_time.strptime("%Y-%m-%d %H:%M:%S.%f"))
-                new_file.write(";")
-                new_file.write(str(rec.temperature))
-                new_file.write(";")
-                new_file.write(str(rec.frequency))
-                new_file.write(";")
-                new_file.write(str(rec.voltage))
-                new_file.write(";")
-                new_file.write(str(rec.sensor_id))
-                new_file.write("\n")
-        new_file.close()
+                for rec in self.min_records:
+                    vals = [
+                        rec.utc_timesunset.strptime(PROJECT_DATE_FORMAT),
+                        rec.local_time.strptime(PROJECT_DATE_FORMAT),
+                        str(rec.temperature),
+                        str(rec.frequency),
+                        str(rec.voltage),
+                        rec.sensor_id
+                    ]
+                    new_file.write(";".join(vals) + "\n")
 
     # import previously exported night record
     def rec_import(self, filename: str):
         # takes an already created object and updates it to imported values
-        file = open(filename)
-        p_str = file.readline()
-        if p_str == "INVALID":
-            # check if this is okay for str comp?
-            self.valid_for_use = False
-            self.exclusion_reason = file.readline()
-        else:
-            # night date -- 2023-01-23 06:00:00.992
-            self.night_date = Time(p_str)
-            # morning date
-            self.morning_date = Time(file.readline())
-            # sunrise
-            self.sunrise = Time(file.readline())
-            # sunset
-            self.sunset = Time(file.readline())
-            # twilight
-            self.astronomical_twilight = Time(file.readline())
-            # illumination
-            self.moon_illumination = file.readline().float()
-            # weather
-            # unimplemented
-
+        with open(filename) as file:
             p_str = file.readline()
-            while len(p_str) != 0:
-                data = p_str.split(";")
-                m_rec = minute_record(
-                    Time(data[0]),
-                    Time(data[1]),
-                    data[2].float(),
-                    data[3].float(),
-                    data[4].float,
-                    data[5],
-                )
-                self.min_records.append(m_rec)
+            if p_str == "INVALID":
+                # check if this is okay for str comp?
+                self.valid_for_use = False
+                self.exclusion_reason = file.readline()
+            else:
+                # night date -- 2023-01-23 06:00:00.992
+                self.night_date = Time(p_str)
+                # morning date
+                self.morning_date = Time(file.readline())
+                # sunrise
+                self.sunrise = Time(file.readline())
+                # sunset
+                self.sunset = Time(file.readline())
+                # twilight
+                self.astronomical_twilight = Time(file.readline())
+                # illumination
+                self.moon_illumination = file.readline().float()
+                # weather
+                # unimplemented
+
                 p_str = file.readline()
-        file.close()
+                while len(p_str) != 0:
+                    data = p_str.split(";")
+                    m_rec = minute_record(
+                        Time(data[0]),
+                        Time(data[1]),
+                        data[2].float(),
+                        data[3].float(),
+                        data[4].float,
+                        data[5],
+                    )
+                    self.min_records.append(m_rec)
+                    p_str = file.readline()
