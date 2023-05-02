@@ -1,5 +1,6 @@
 # include library python-weather at https://github.com/null8626/python-weather
 # might switch to a weather api?
+import sys
 import os
 
 import astropy.units as u
@@ -48,8 +49,8 @@ class night_record:
         night_file: str,
         morning_date: Time,
         morning_file: str,
-        sensor_long: float,
         sensor_lat: float,
+        sensor_long: float,
     ):
         # let night and morning date include time as noon of their respective days
         # Format Reminders: time = Time('2015-06-16 12:00:00') for assignment,
@@ -92,9 +93,9 @@ class night_record:
                 m_rec = minute_record(
                     Time(data[0]),
                     Time(data[1]),
-                    data[2].float(),
-                    data[3].float(),
-                    data[4].float,
+                    float(data[2]),
+                    float(data[3]),
+                    float(data[4]),
                     data[5],
                 )
                 if (
@@ -212,10 +213,40 @@ class night_record:
                     m_rec = minute_record(
                         Time(data[0]),
                         Time(data[1]),
-                        data[2].float(),
-                        data[3].float(),
-                        data[4].float,
+                        float(data[2]),
+                        float(data[3]),
+                        float(data[4]),
                         data[5],
                     )
                     self.min_records.append(m_rec)
                     p_str = file.readline()
+def test_run():
+    print("hi!")
+
+def cor_frmwrk_tests():
+    nrec = night_record()
+    
+    # print("starting simple test:\n")
+    '''
+    simple test will use simple_test_night.txt and simple_test_morning.txt
+    on the night of 2023/01/24 and morning of 2023/01/25, where moon
+    illumination is 9.9%, sunset is 4:55 PM, sunrise is 7:09 AM, and
+    astronomical twilight is between 05:59 PM and 6:32 PM in Hyde Park
+    '''
+    # print("working directory: %s" + os.getcwd() + "\n")
+    nrec.initialize(Time("2023-01-24 12:00:00.000"), "./test_files/simple_test_night.txt", 
+                    Time("2023-01-25 12:00:00.000"), "./test_files/simple_test_morning.txt",
+                    41.7948, -87.5917)
+    print("night date should be 23/1/24: %s\n", nrec.nightof.strptime(PROJECT_DATE_FORMAT))
+    print("morning date should be 23/1/25: %s\n", nrec.morningof.strptime(PROJECT_DATE_FORMAT))
+    print("sunset should be ~16:55: %s\n", nrec.sunset.strptime(PROJECT_DATE_FORMAT))
+    print("sunrise should be ~7:09: %s\n", nrec.sunrise.strptime(PROJECT_DATE_FORMAT))
+    print("twilight should be between 17:59 and 18:32: %s\n", nrec.astronomical_twilight.strptime(PROJECT_DATE_FORMAT))
+    print("illumination should be ~9.9: %f\n", nrec.moon_illumination)
+    print("should be 2 records: %d\n", len(nrec.min_records))
+    print("first record should be 17:00: %s\n", nrec.min_records[0].local_time.strptime(PROJECT_DATE_FORMAT))
+    print("second record should be 5:00: %s\n", nrec.min_records[1].local_time.strptime(PROJECT_DATE_FORMAT))
+    print("exclusion should be none: %s\n", nrec.exclusion_reason)
+
+if __name__ == '__main__':
+    globals()[sys.argv[1]]()
