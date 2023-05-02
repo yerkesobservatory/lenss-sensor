@@ -227,7 +227,7 @@ def test_run():
 def cor_frmwrk_tests():
     nrec = night_record()
     
-    print("starting simple test:\n")
+    print("starting simple test:")
     '''
     simple test will use simple_test_night.txt and simple_test_morning.txt on 
     the night of 2023/01/24 and morning of 2023/01/25, where moon illumination is 9.9%, 
@@ -238,18 +238,22 @@ def cor_frmwrk_tests():
     nrec.initialize(Time("2023-01-24 12:00:00.000"), "./test_files/simple_test_night.txt", 
                     Time("2023-01-25 12:00:00.000"), "./test_files/simple_test_morning.txt",
                     41.7948, -87.5917)
-    print("night date should be 23/1/24: " + nrec.nightof.strftime(PROJECT_DATE_FORMAT) + "\n")
+    print("night date should be 23/1/24: " + nrec.nightof.strftime(PROJECT_DATE_FORMAT))
     print("morning date should be 23/1/25: " + nrec.morningof.strftime(PROJECT_DATE_FORMAT) + "\n")
-    # roughly one hour discrepency for the next three, likely due to daylight savings
-    print("sunset should be ~21:55: " + nrec.sunset.strftime(PROJECT_DATE_FORMAT) + "\n")
-    print("sunrise should be ~12:09: " + nrec.sunrise.strftime(PROJECT_DATE_FORMAT) + "\n")
+
+    print("sunrise, sunset, and twilight are off by one hour, likely due to daylight savings; otherwise within reasonable range (~5m)")
+    print("sunset should be ~21:55: " + nrec.sunset.strftime(PROJECT_DATE_FORMAT))
+    print("sunrise should be ~12:09: " + nrec.sunrise.strftime(PROJECT_DATE_FORMAT))
     print("twilight should be between 10:59 and 11:32: " + nrec.astronomical_twilight.strftime(PROJECT_DATE_FORMAT) + "\n")
-    # there's a disrepency but i'm not positive that the value i pulled was definitively correct
+
+    print("illumination is way off but that could be indicative of real world conditions in Chicago rather than an error")
     print("illumination should be ~9.9: " + str(nrec.moon_illumination) + "\n")
-    print("should be 2 records: " + str(len(nrec.min_records)) + "\n")
-    print("first record should be 23:00: " + nrec.min_records[0].utc_time.strftime(PROJECT_DATE_FORMAT) + "\n")
+
+    print("should be 2 records: " + str(len(nrec.min_records)))
+    print("first record should be 23:00: " + nrec.min_records[0].utc_time.strftime(PROJECT_DATE_FORMAT))
     print("second record should be 10:00: " + nrec.min_records[1].utc_time.strftime(PROJECT_DATE_FORMAT) + "\n")
-    print("exclusion should be none: " + nrec.exclusion_reason + "\n")
+
+    print("exclusion should be none: " + nrec.exclusion_reason)
 
 if __name__ == '__main__':
     globals()[sys.argv[1]]()
