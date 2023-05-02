@@ -65,10 +65,11 @@ class night_record:
             name="Sensor",
             timezone="US/Central",
         )
-        self.sunset = sensor.sun_set_time(night_date, which="next")
-        self.sunrise = sensor.sun_rise_time(night_date, which="next")
+        # reports time in UTC
+        self.sunset = sensor.sun_set_time(night_date, which='nearest')
+        self.sunrise = sensor.sun_rise_time(morning_date, which="nearest")
         self.astronomical_twilight = sensor.twilight_evening_astronomical(
-            night_date, which="next"
+            night_date, which="nearest"
         )
 
         # how much of the lunar surface is illuminated that night, pulled when the sky is fully dark (astro. twilight)
@@ -99,8 +100,8 @@ class night_record:
                     data[5],
                 )
                 if (
-                    m_rec.local_time < self.sunset
-                ):  # unsure if this will work or if a special time comp function is needed
+                    m_rec.utc_time < self.sunset
+                ):
                     transtr = n_file.readline()
                     continue
                 self.min_records.append(m_rec)
@@ -121,8 +122,8 @@ class night_record:
                     data[5],
                 )
                 if (
-                    m_rec.local_time > self.sunrise
-                ):  # unsure if this will work or if a special time comp function is needed
+                    m_rec.utc_time > self.sunrise
+                ): 
                     break
                 self.min_records.append(m_rec)
                 transtr = m_file.readline()
@@ -228,10 +229,10 @@ def cor_frmwrk_tests():
     
     print("starting simple test:\n")
     '''
-    simple test will use simple_test_night.txt and simple_test_morning.txt
-    on the night of 2023/01/24 and morning of 2023/01/25, where moon
-    illumination is 9.9%, sunset is 4:55 PM, sunrise is 7:09 AM, and
-    astronomical twilight is between 05:59 PM and 6:32 PM in Hyde Park
+    simple test will use simple_test_night.txt and simple_test_morning.txt on 
+    the night of 2023/01/24 and morning of 2023/01/25, where moon illumination is 9.9%, 
+    sunset is 4:55 PM CT/9:55 PM UTC, sunrise is 7:09 AM CT/12:09 PM UTC, and astronomical 
+    twilight is between 05:59 PM CT/10:59 PM UTC and 6:32 PM CT/11:32 PM UTC in Hyde Park
     '''
     print("working directory: " + os.getcwd() + "\n")
     nrec.initialize(Time("2023-01-24 12:00:00.000"), "./test_files/simple_test_night.txt", 
@@ -239,13 +240,15 @@ def cor_frmwrk_tests():
                     41.7948, -87.5917)
     print("night date should be 23/1/24: " + nrec.nightof.strftime(PROJECT_DATE_FORMAT) + "\n")
     print("morning date should be 23/1/25: " + nrec.morningof.strftime(PROJECT_DATE_FORMAT) + "\n")
-    print("sunset should be ~16:55: " + nrec.sunset.strftime(PROJECT_DATE_FORMAT) + "\n")
-    print("sunrise should be ~7:09: " + nrec.sunrise.strftime(PROJECT_DATE_FORMAT) + "\n")
-    print("twilight should be between 17:59 and 18:32: " + nrec.astronomical_twilight.strftime(PROJECT_DATE_FORMAT) + "\n")
+    # roughly one hour discrepency for the next three, likely due to daylight savings
+    print("sunset should be ~21:55: " + nrec.sunset.strftime(PROJECT_DATE_FORMAT) + "\n")
+    print("sunrise should be ~12:09: " + nrec.sunrise.strftime(PROJECT_DATE_FORMAT) + "\n")
+    print("twilight should be between 10:59 and 11:32: " + nrec.astronomical_twilight.strftime(PROJECT_DATE_FORMAT) + "\n")
+    # there's a disrepency but i'm not positive that the value i pulled was definitively correct
     print("illumination should be ~9.9: " + str(nrec.moon_illumination) + "\n")
     print("should be 2 records: " + str(len(nrec.min_records)) + "\n")
-    print("first record should be 17:00: " + nrec.min_records[0].local_time.strftime(PROJECT_DATE_FORMAT) + "\n")
-    print("second record should be 5:00: " + nrec.min_records[1].local_time.strftime(PROJECT_DATE_FORMAT) + "\n")
+    print("first record should be 23:00: " + nrec.min_records[0].utc_time.strftime(PROJECT_DATE_FORMAT) + "\n")
+    print("second record should be 10:00: " + nrec.min_records[1].utc_time.strftime(PROJECT_DATE_FORMAT) + "\n")
     print("exclusion should be none: " + nrec.exclusion_reason + "\n")
 
 if __name__ == '__main__':
