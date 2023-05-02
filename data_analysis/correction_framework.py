@@ -1,5 +1,3 @@
-# include library python-weather at https://github.com/null8626/python-weather
-# might switch to a weather api?
 import sys
 import os
 
@@ -77,14 +75,13 @@ class night_record:
         self.moon_illumination = sensor.moon_illumination(
             self.astronomical_twilight
         )
-        self.weather = 0  # TODO Update Placeholder -- how to succinctly record nightly weather?
+        # future TODO: store nightly weather
+
+        self.min_records = []
 
         # example line from 2023-01-23_LENSSTSL0008.txt:
         # 2023-01-23T06:00:00.992;2023-01-23T00:00:00.992;0.38;4.39;0.0;LENSS_TSL_0008
         # UTC Time; Local Time; Temperature (C); Frequency; Voltage; ID
-
-        self.min_records = []
-
         with open(night_file) as n_file:
             transtr = n_file.readline()
             while len(transtr) != 0:
@@ -131,7 +128,7 @@ class night_record:
         self.valid_for_use = True
         self.exclusion_reason = "None"
 
-    # mark data as invalid based on various night conditions
+    # grade quality of as based on various night conditions
     def grade_data(self):
         # taking the average night to be ten hours (600 minutes), if more than three hours (180 minutes) are missing,
         # invalidate the data based on insufficient records
@@ -139,8 +136,8 @@ class night_record:
             self.valid_for_use = False
             self.exclusion_reason = "Insufficient Records for Night"
 
-        # if the moon would have been obscured by bad weather for more then three hours, invalidate based on weather conditions
-        # use something other than python-weather?
+        # future TODO: invalidate based on weather conditions
+        # potential future TODO: grade data on a scale (good, poor, unusable, etc) instead of just valid or invalid
 
     # given a function on a float, updates all temperature, frequency, or voltage values
     def apply_correction(self, field_to_update: str, funct):
@@ -168,13 +165,13 @@ class night_record:
                     self.sunrise.strftime(PROJECT_DATE_FORMAT),
                     self.sunset.strftime(PROJECT_DATE_FORMAT),
                     self.astronomical_twilight.strftime(PROJECT_DATE_FORMAT),
-                    str(self.moon_illumination) #weather unimplemented
+                    str(self.moon_illumination)
                 ]
                 new_file.write("\n".join(vals) + "\n")
 
                 for rec in self.min_records:
                     vals = [
-                        rec.utc_timesunset.strftime(PROJECT_DATE_FORMAT),
+                        rec.utc_time.strftime(PROJECT_DATE_FORMAT),
                         rec.local_time.strftime(PROJECT_DATE_FORMAT),
                         str(rec.temperature),
                         str(rec.frequency),
@@ -189,7 +186,6 @@ class night_record:
         with open(filename) as file:
             p_str = file.readline()
             if p_str == "INVALID":
-                # check if this is okay for str comp?
                 self.valid_for_use = False
                 self.exclusion_reason = file.readline()
             else:
@@ -204,9 +200,7 @@ class night_record:
                 # twilight
                 self.astronomical_twilight = Time(file.readline())
                 # illumination
-                self.moon_illumination = file.readline().float()
-                # weather
-                # unimplemented
+                self.moon_illumination = float(file.readline())
 
                 p_str = file.readline()
                 while len(p_str) != 0:
@@ -221,10 +215,9 @@ class night_record:
                     )
                     self.min_records.append(m_rec)
                     p_str = file.readline()
-def test_run():
-    print("hi!")
 
 def cor_frmwrk_tests():
+    # run with "python correction_framework.py cor_frmwrk_tests" on command line
     nrec = night_record()
     
     print("starting simple test:")
