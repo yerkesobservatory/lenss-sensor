@@ -218,9 +218,9 @@ class NightRecord:
                     p_str = file.readline()
 
 
-def cor_frmwrk_tests():
+def cor_framework_tests():
     # run with "python correction_framework.py cor_frmwrk_tests" on command line
-    nrec = NightRecord()
+    n_rec = NightRecord()
 
     print("starting simple test:")
     """
@@ -231,7 +231,7 @@ def cor_frmwrk_tests():
     PM CT/11:32 PM UTC in Hyde Park
     """
     print("working directory: " + os.getcwd() + "\n")
-    nrec.initialize(
+    n_rec.initialize(
         Time("2023-01-24 12:00:00.000"),
         "./test_files/simple_test_night.txt",
         Time("2023-01-25 12:00:00.000"),
@@ -241,11 +241,11 @@ def cor_frmwrk_tests():
     )
     print(
         "night date should be 23/1/24: "
-        + nrec.night_of.strftime(PROJECT_DATE_FORMAT)
+        + n_rec.night_of.strftime(PROJECT_DATE_FORMAT)
     )
     print(
         "morning date should be 23/1/25: "
-        + nrec.morning_of.strftime(PROJECT_DATE_FORMAT)
+        + n_rec.morning_of.strftime(PROJECT_DATE_FORMAT)
         + "\n"
     )
 
@@ -254,15 +254,15 @@ def cor_frmwrk_tests():
         "daylight savings; otherwise within reasonable range (~5m)"
     )
     print(
-        "sunset should be ~21:55: " + nrec.sunset.strftime(PROJECT_DATE_FORMAT)
+        "sunset should be ~21:55: " + n_rec.sunset.strftime(PROJECT_DATE_FORMAT)
     )
     print(
         "sunrise should be ~12:09: "
-        + nrec.sunrise.strftime(PROJECT_DATE_FORMAT)
+        + n_rec.sunrise.strftime(PROJECT_DATE_FORMAT)
     )
     print(
         "twilight should be between 10:59 and 11:32: "
-        + nrec.astronomical_twilight.strftime(PROJECT_DATE_FORMAT)
+        + n_rec.astronomical_twilight.strftime(PROJECT_DATE_FORMAT)
         + "\n"
     )
 
@@ -270,20 +270,20 @@ def cor_frmwrk_tests():
         "illumination is way off but that could be indicative of real world "
         "conditions in Chicago rather than an error"
     )
-    print("illumination should be ~9.9: " + str(nrec.moon_illumination) + "\n")
+    print("illumination should be ~9.9: " + str(n_rec.moon_illumination) + "\n")
 
-    print("should be 2 records: " + str(len(nrec.min_records)))
+    print("should be 2 records: " + str(len(n_rec.min_records)))
     print(
         "first record should be 23:00: "
-        + nrec.min_records[0].utc_time.strftime(PROJECT_DATE_FORMAT)
+        + n_rec.min_records[0].utc_time.strftime(PROJECT_DATE_FORMAT)
     )
     print(
         "second record should be 10:00: "
-        + nrec.min_records[1].utc_time.strftime(PROJECT_DATE_FORMAT)
+        + n_rec.min_records[1].utc_time.strftime(PROJECT_DATE_FORMAT)
         + "\n"
     )
 
-    print("exclusion should be none: " + nrec.exclusion_reason)
+    print("exclusion should be none: " + n_rec.exclusion_reason)
 
 
 if __name__ == "__main__":
