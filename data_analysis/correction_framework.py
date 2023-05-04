@@ -8,7 +8,7 @@ from astropy.time import Time
 PROJECT_DATE_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
 
-class minute_record:
+class MinuteRecord:
     def __init__(
         self,
         utc: Time,
@@ -26,7 +26,7 @@ class minute_record:
         self.sensor_id = id
 
 
-class night_record:
+class NightRecord:
     """
     create an uninitialized night record
     """
@@ -96,7 +96,7 @@ class night_record:
                 data = trans_str.split(";")
                 data[0] = data[0].replace("T", " ")
                 data[1] = data[1].replace("T", " ")
-                m_rec = minute_record(
+                m_rec = MinuteRecord(
                     Time(data[0]),
                     Time(data[1]),
                     float(data[2]),
@@ -116,7 +116,7 @@ class night_record:
                 data = trans_str.split(";")
                 data[0] = data[0].replace("T", " ")
                 data[1] = data[1].replace("T", " ")
-                m_rec = minute_record(
+                m_rec = MinuteRecord(
                     Time(data[0]),
                     Time(data[1]),
                     float(data[2]),
@@ -223,7 +223,7 @@ class night_record:
                 p_str = file.readline()
                 while len(p_str) != 0:
                     data = p_str.split(";")
-                    m_rec = minute_record(
+                    m_rec = MinuteRecord(
                         Time(data[0]),
                         Time(data[1]),
                         float(data[2]),
@@ -242,7 +242,7 @@ prints results of the struct creation on a small sample file
 
 def cor_frmwrk_tests():
     # run with "python correction_framework.py cor_frmwrk_tests" on command line
-    n_rec = night_record()
+    n_rec = NightRecord()
 
     print("starting simple test:")
     """
