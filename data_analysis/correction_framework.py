@@ -32,6 +32,9 @@ class NightRecord:
     """
 
     def __init__(self):
+        """
+        initialize a night record from a raw data file
+        """
         self.nightof = 0
         self.morningof = 0
         self.sunset = 0
@@ -42,10 +45,6 @@ class NightRecord:
         self.min_records = []
         self.valid_for_use = False
         self.exclusion_reason = "UNINITIALIZED"
-
-    """
-    initialize a night record from a raw data file
-    """
 
     def initialize(
         self,
@@ -132,11 +131,10 @@ class NightRecord:
         self.valid_for_use = True
         self.exclusion_reason = "None"
 
-    """
-    grade quality of as based on various night conditions
-    """
-
     def grade_data(self):
+        """
+        Grade quality of as based on various night conditions.
+        """
         # taking the average night to be ten hours (600 minutes), if more than
         # three hours (180 minutes) are missing, invalidate the data based on
         # insufficient records
@@ -148,11 +146,11 @@ class NightRecord:
         # potential future TODO: grade data on a scale (good, poor, unusable,
         #  etc) instead of just valid or invalid
 
-    """
-    given a function on a float, updates all temperature, frequency, or voltage values
-    """
-
     def apply_correction(self, field_to_update: str, funct):
+        """
+        Given a function on a float, updates all temperature, frequency,
+        or voltage values.
+        """
         if field_to_update == "TEMP":
             for rec in self.min_records:
                 rec.temperature = funct(rec.temperature)
@@ -165,11 +163,10 @@ class NightRecord:
         else:
             print("error: field not recognized/field should not be updated")
 
-    """
-    export night record to a new file
-    """
-
     def rec_export(self, filename: str):
+        """
+        Export night record to a new file.
+        """
         with open(filename, "x") as new_file:
             if not self.valid_for_use:
                 new_file.write("INVALID\n" + self.exclusion_reason)
@@ -195,11 +192,10 @@ class NightRecord:
                     ]
                     new_file.write(";".join(vals) + "\n")
 
-    """
-    import previously exported night record
-    """
-
     def rec_import(self, filename: str):
+        """
+        Import previously exported night record.
+        """
         # takes an already created object and updates it to imported values
         with open(filename) as file:
             p_str = file.readline()
@@ -235,12 +231,10 @@ class NightRecord:
                     p_str = file.readline()
 
 
-"""
-prints results of the struct creation on a small sample file
-"""
-
-
 def cor_frmwrk_tests():
+    """
+    Prints results of the struct creation on a small sample file.
+    """
     # run with "python correction_framework.py cor_frmwrk_tests" on command line
     n_rec = NightRecord()
 
