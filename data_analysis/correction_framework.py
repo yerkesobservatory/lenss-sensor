@@ -33,7 +33,7 @@ class NightRecord:
 
     def __init__(self):
         """
-        initialize a night record from a raw data file
+        Initialize a night record from a raw data file.
         """
         self.nightof = 0
         self.morningof = 0
