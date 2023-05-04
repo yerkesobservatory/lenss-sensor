@@ -108,10 +108,10 @@ class TwoNights(Visualization):
         )
 
         df["Time (CST)"] = pd.to_datetime(
-            df["Time (CST)"], format="%Y-%m-%dT%H:%M:%S.%f"
+            df["Time (CST)"], format=timestamp_format
         )
         df["Time (UTC)"] = pd.to_datetime(
-            df["Time (UTC)"], format="%Y-%m-%dT%H:%M:%S.%f"
+            df["Time (UTC)"], format=timestamp_format
         )
 
         df["Day"] = df["Time (UTC)"].dt.day
