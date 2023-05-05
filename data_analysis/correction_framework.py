@@ -1,3 +1,7 @@
+"""
+TODO: File level docstring.
+"""
+
 import sys
 import os
 
@@ -28,7 +32,7 @@ class MinuteRecord:
 
 class NightRecord:
     """
-    create an uninitialized night record
+    Create an uninitialized night record.
     """
 
     def __init__(self):
@@ -231,11 +235,12 @@ class NightRecord:
                     p_str = file.readline()
 
 
-def cor_frmwrk_tests():
+def core_framework_tests():
     """
     Prints results of the struct creation on a small sample file.
     """
-    # run with "python correction_framework.py cor_frmwrk_tests" on command line
+    # run with "python correction_framework.py core_framework_tests" on
+    # command line
     n_rec = NightRecord()
 
     print("starting simple test:")
