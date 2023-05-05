@@ -35,8 +35,8 @@ class NightRecord:
         """
         Initialize a night record from a raw data file.
         """
-        self.nightof = 0
-        self.morningof = 0
+        self.night_of = 0
+        self.morning_of = 0
         self.sunset = 0
         self.sunrise = 0
         self.astronomical_twilight = 0
