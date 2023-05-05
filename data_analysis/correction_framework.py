@@ -26,7 +26,7 @@ class MinuteRecord:
         self.local_time = local
         self.temperature = temp
         self.frequency = freq
-        self.voltag = volt
+        self.voltage = volt
         self.sensor_id = id
 
 
