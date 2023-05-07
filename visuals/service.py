@@ -12,10 +12,13 @@ def main():
     """
     This function serves as the main function that will render all the visuals.
     """
-    print("Doing things.")
 
+    # TODO: Sync with Google Docs
+    # TODO: Go through Google Docs directory and pull the appropriate files
+    # TODO: Alena and Abraham, make note of teh files needed and coordinate with
+    # TODO: Fatimah on which files you'll be using for these visuals. You should
+    # TODO: be using the cleaned night files and not the raw data files.
 
-if __name__ == "__main__":
     LENSSPlotter(
         "2022-10-11_LENSSTSL0008.txt",
         "2022-10-12_LENSSTSL0008.txt",
@@ -35,3 +38,7 @@ if __name__ == "__main__":
     ).create_visual()
 
     WeeklyAverage("2022-8-23", "2023-1-23", 42.57, -88.542, 8).create_visual()
+
+
+if __name__ == "__main__":
+    main()
