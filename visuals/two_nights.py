@@ -311,17 +311,3 @@ class TwoNights(Visualization):
 
         # Plot the line graph
         pyo.plot(fig, filename="Two_Nights.html")
-
-
-if __name__ == "__main__":
-    vis1 = TwoNights(
-        "2022-09-19_LENSSTSL0008.txt",
-        "2022-09-20_LENSSTSL0008.txt",
-        "2022-12-26_LENSSTSL0008.txt",
-        "2022-12-27_LENSSTSL0008.txt",
-        42.57,
-        -88.542,
-        8,
-    )
-
-    vis1.create_visual()

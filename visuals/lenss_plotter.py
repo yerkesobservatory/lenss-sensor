@@ -248,14 +248,3 @@ class LENSSPlotter(Visualization):
 
         # Plot the line graph
         pyo.plot(fig, filename="LENSS_Plotter.html")
-
-
-if __name__ == "__main__":
-    vis1 = LENSSPlotter(
-        "2022-10-11_LENSSTSL0008.txt",
-        "2022-10-12_LENSSTSL0008.txt",
-        42.57,
-        -88.542,
-        8,
-    )
-    vis1.create_visual()

@@ -203,8 +203,3 @@ class WeeklyAverage(Visualization):
         )
 
         pyo.plot(fig, filename="Weekly_Average.html")
-
-
-if __name__ == "__main__":
-    vis3 = WeeklyAverage("2022-8-23", "2023-1-23", 42.57, -88.542, 8)
-    vis3.create_visual()
