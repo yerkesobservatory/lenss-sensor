@@ -184,7 +184,7 @@ class LENSSPlotter(Visualization):
         """
         t_start = datetime.combine(self.evening_day, time(22, 0, 0))
         t_end = datetime.combine(self.morning_day, time(4, 0, 0))
-        
+
         df = pd.concat([self.evening_data, self.morning_data])
 
         df = df[(df["Time (CST)"] >= t_start) & (df["Time (CST)"] <= t_end)]
