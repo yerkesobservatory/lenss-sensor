@@ -195,17 +195,16 @@ class TwoNights(Visualization):
 
         return sunset_24time, sunrise_24time
 
-    def create_visual(
-        self,
-        t_start1: datetime,
-        t_end1: datetime,
-        t_start2: datetime,
-        t_end2: datetime,
-    ):
+    def create_visual(self):
         """
         This method takes the data from the _construct_data function and returns
         a visual object as an HTML file.
         """
+        t_start1 = datetime.combine(self.evening_day1, time(22, 0, 0))
+        t_end1 = datetime.combine(self.morning_day1, time(4, 0, 0))
+
+        t_start2 = datetime.combine(self.evening_day2, time(22, 0, 0))
+        t_end2 = datetime.combine(self.morning_day2, time(4, 0, 0))
 
         df1 = pd.concat([self.e1, self.m1])
         df2 = pd.concat([self.e2, self.m2])
@@ -333,10 +332,4 @@ if __name__ == "__main__":
         8,
     )
 
-    t_start1 = datetime.combine(vis1.evening_day1, time(22, 0, 0))
-    t_end1 = datetime.combine(vis1.morning_day1, time(4, 0, 0))
-
-    t_start2 = datetime.combine(vis1.evening_day2, time(22, 0, 0))
-    t_end2 = datetime.combine(vis1.morning_day2, time(4, 0, 0))
-
-    vis1.create_visual(t_start1, t_end1, t_start2, t_end2)
+    vis1.create_visual()

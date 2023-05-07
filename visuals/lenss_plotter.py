@@ -177,12 +177,14 @@ class LENSSPlotter(Visualization):
 
         return sunset_24time, sunrise_24time
 
-    def create_visual(self, t_start: datetime, t_end: datetime):
+    def create_visual(self):
         """
         This method takes the data from the _construct_data function and returns
         a visual object as an HTML file.
         """
-
+        t_start = datetime.combine(self.evening_day, time(22, 0, 0))
+        t_end = datetime.combine(self.morning_day, time(4, 0, 0))
+        
         df = pd.concat([self.evening_data, self.morning_data])
 
         df = df[(df["Time (CST)"] >= t_start) & (df["Time (CST)"] <= t_end)]
@@ -266,7 +268,4 @@ if __name__ == "__main__":
         -88.542,
         8,
     )
-
-    t_start = datetime.combine(vis1.evening_day, time(22, 0, 0))
-    t_end = datetime.combine(vis1.morning_day, time(4, 0, 0))
-    vis1.create_visual(t_start, t_end)
+    vis1.create_visual()
