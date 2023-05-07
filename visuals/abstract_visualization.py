@@ -15,26 +15,10 @@ class Visualization(ABC):
         pass
 
     @abstractmethod
-    def _parse_data(self):
+    def _parse_data(self, df):
         """
         This method cleans the data files and organizes it with the relevant
         column names as a dataframe.
-        """
-        pass
-
-    @abstractmethod
-    def _construct_data(self):
-        """
-        This method constructs all the information needed for the class to
-        render the visualization.
-        """
-        pass
-
-    @abstractmethod
-    def _call_apis(self):
-        """
-        This method pulls the relevant weather, moon phase, etc. data for each
-        night from external APIs.
         """
         pass
 
