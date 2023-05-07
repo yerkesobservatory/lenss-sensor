@@ -100,21 +100,11 @@ class LENSSPlotter(Visualization):
         df["Year"] = df["Time (UTC)"].dt.year
         df["Date"] = df["Time (UTC)"].apply(lambda x: x.date())
 
-    def _construct_data(self):
-        """
-        This method constructs all the information needed for the
-        class to render the visualization.
-        """
-        pass
-
     def _get_moon_info(self, df: pd.DataFrame):
         def get_moon_illum(t: datetime):
             return float(str(self.sensor_location.moon_illumination(str(t))))
 
         df["moon_illum"] = df["Time (CST)"].apply(lambda t: get_moon_illum(t))
-
-    def _call_apis(self):
-        return super()._call_apis()
 
     def _call_weather_api(self, t_start: datetime, t_end: datetime):
         """

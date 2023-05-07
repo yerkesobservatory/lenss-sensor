@@ -118,7 +118,8 @@ class WeeklyAverage(Visualization):
         df["Year"] = df["Time (CST)"].dt.year
         df["Date"] = df["Time (CST)"].apply(lambda x: x.date())
 
-    def _construct_data(self, df):
+    @staticmethod
+    def _construct_data(df):
         """
         This method constructs all the information needed for the class to
         render the visualization.

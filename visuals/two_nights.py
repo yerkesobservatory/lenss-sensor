@@ -119,21 +119,13 @@ class TwoNights(Visualization):
         df["Year"] = df["Time (UTC)"].dt.year
         df["Date"] = df["Time (UTC)"].apply(lambda x: x.date())
 
-    def _construct_data(self):
-        """
-        This method constructs all the information needed for the
-        class to render the visualization.
-        """
-        pass
-
     def _get_moon_info(self, df: pd.DataFrame):
-        def get_moon_illum(t: datetime):
+        def get_moon_illumination(t: datetime):
             return float(str(self.sensor_location.moon_illumination(str(t))))
 
-        df["moon_illum"] = df["Time (CST)"].apply(lambda t: get_moon_illum(t))
-
-    def _call_apis(self):
-        return super()._call_apis()
+        df["moon_illum"] = df["Time (CST)"].apply(
+            lambda t: get_moon_illumination(t)
+        )
 
     def _call_weather_api(self, t_start: datetime, t_end: datetime):
         """
@@ -295,8 +287,8 @@ class TwoNights(Visualization):
             showarrow=False,
         )
 
-        cloudcover1 = self._call_weather_api(t_start1, t_end1)
-        avg_cloud_cover1 = sum(cloudcover1.values()) / len(cloudcover1)
+        cloud_cover_one = self._call_weather_api(t_start1, t_end1)
+        avg_cloud_cover1 = sum(cloud_cover_one.values()) / len(cloud_cover_one)
         fig.add_annotation(
             text=f"{self.evening_day1} Avg. Cloud Cover: "
             f"{avg_cloud_cover1:.1f}%",
@@ -305,8 +297,8 @@ class TwoNights(Visualization):
             showarrow=False,
         )
 
-        cloudcover2 = self._call_weather_api(t_start2, t_end2)
-        avg_cloud_cover2 = sum(cloudcover2.values()) / len(cloudcover2)
+        cloud_cover_two = self._call_weather_api(t_start2, t_end2)
+        avg_cloud_cover2 = sum(cloud_cover_two.values()) / len(cloud_cover_two)
         fig.add_annotation(
             text=f"{self.evening_day2} Avg. Cloud Cover: "
             f"{avg_cloud_cover2:.1f}%",
