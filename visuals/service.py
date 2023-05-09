@@ -21,6 +21,10 @@ def main():
     # Verify that all files needed for a given chart exist and update flag
     # Build charts that can be built using google client
 
+    make_lenss_plotter = True
+    make_two_nights = True
+    make_weekly_average = True
+
     LENSSPlotter(
         "2022-10-11_LENSSTSL0008.txt",
         "2022-10-12_LENSSTSL0008.txt",
