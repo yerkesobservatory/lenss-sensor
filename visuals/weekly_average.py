@@ -148,7 +148,7 @@ class WeeklyAverage(Visualization):
                 f"?latitude={self.sensor_latitude}&longitude="
                 f"{self.sensor_longitude}&start_date={curr_week}"
                 f"&end_date={next_week}&daily=snowfall_sum"
-                f"&timezone=America%2FChicago "
+                f"&timezone=America%2FChicago"
             )
             response = requests.get(api_url)
             data = response.json()
