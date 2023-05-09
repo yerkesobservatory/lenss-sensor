@@ -21,12 +21,6 @@ def main():
     # Verify that all files needed for a given chart exist and update flag
     # Build charts that can be built using google client
 
-    # TODO: Sync with Google Docs
-    # TODO: Go through Google Docs directory and pull the appropriate files
-    # TODO: Alena and Abraham, make note of teh files needed and coordinate with
-    # TODO: Fatimah on which files you'll be using for these visuals. You should
-    # TODO: be using the cleaned night files and not the raw data files.
-
     LENSSPlotter(
         "2022-10-11_LENSSTSL0008.txt",
         "2022-10-12_LENSSTSL0008.txt",
