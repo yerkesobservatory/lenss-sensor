@@ -25,25 +25,30 @@ def main():
     make_two_nights = True
     make_weekly_average = True
 
-    LENSSPlotter(
-        "2022-10-11_LENSSTSL0008.txt",
-        "2022-10-12_LENSSTSL0008.txt",
-        42.57,
-        -88.542,
-        8,
-    ).create_visual()
+    if make_lenss_plotter:
+        LENSSPlotter(
+            "2022-10-11_LENSSTSL0008.txt",
+            "2022-10-12_LENSSTSL0008.txt",
+            42.57,
+            -88.542,
+            8,
+        ).create_visual()
 
-    TwoNights(
-        "2022-09-19_LENSSTSL0008.txt",
-        "2022-09-20_LENSSTSL0008.txt",
-        "2022-12-26_LENSSTSL0008.txt",
-        "2022-12-27_LENSSTSL0008.txt",
-        42.57,
-        -88.542,
-        8,
-    ).create_visual()
+    if make_two_nights:
+        TwoNights(
+            "2022-09-19_LENSSTSL0008.txt",
+            "2022-09-20_LENSSTSL0008.txt",
+            "2022-12-26_LENSSTSL0008.txt",
+            "2022-12-27_LENSSTSL0008.txt",
+            42.57,
+            -88.542,
+            8,
+        ).create_visual()
 
-    WeeklyAverage("2022-8-23", "2023-1-23", 42.57, -88.542, 8).create_visual()
+    if make_weekly_average:
+        WeeklyAverage(
+            "2022-8-23", "2023-1-23", 42.57, -88.542, 8
+        ).create_visual()
 
 
 def google_client():
