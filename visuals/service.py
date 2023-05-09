@@ -16,7 +16,7 @@ def main():
     # Pseudocode for next step
     # Get previous days date
     # Construct the file names needed for each chart
-    # `[YYYY-MM-DD]_LENSSTSL0002.txt`
+    # `[YYYY-MM-DD]_LENSSTSL0002.txt` and folder names `[MM]`
     # Make flag values to indicate if you need to build the chart
     # Verify that all files needed for a given chart exist and update flag
     # Build charts that can be built using google client
@@ -50,8 +50,9 @@ def verify_file(folder: str, file_name: str):
     return True
 
 
-def get_file(folder:str, file_name:str):
+def get_file(folder: str, file_name: str):
     return True
+
 
 if __name__ == "__main__":
     main()
