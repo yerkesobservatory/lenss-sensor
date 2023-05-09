@@ -13,6 +13,14 @@ def main():
     This function serves as the main function that will render all the visuals.
     """
 
+    # Pseudocode for next step
+    # Get previous days date
+    # Construct the file names needed for each chart
+    # `[YYYY-MM-DD]_LENSSTSL0002.txt`
+    # Make flag values to indicate if you need to build the chart
+    # Verify that all files needed for a given chart exist and update flag
+    # Build charts that can be built using google client
+
     # TODO: Sync with Google Docs
     # TODO: Go through Google Docs directory and pull the appropriate files
     # TODO: Alena and Abraham, make note of teh files needed and coordinate with
@@ -39,6 +47,17 @@ def main():
 
     WeeklyAverage("2022-8-23", "2023-1-23", 42.57, -88.542, 8).create_visual()
 
+
+def google_client():
+    return {}
+
+
+def verify_file(folder: str, file_name: str):
+    return True
+
+
+def get_file(folder:str, file_name:str):
+    return True
 
 if __name__ == "__main__":
     main()
