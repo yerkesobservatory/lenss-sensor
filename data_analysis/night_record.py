@@ -30,27 +30,12 @@ class MinuteRecord:
         self.sensor_id = id
 
 
-class NightRecord:
+class NewNightRecord:
     """
     Create an uninitialized night record.
     """
 
-    def __init__(self):
-        """
-        Initialize a night record from a raw data file.
-        """
-        self.night_of = 0
-        self.morning_of = 0
-        self.sunset = 0
-        self.sunrise = 0
-        self.astronomical_twilight = 0
-        self.moon_illumination = 0
-        self.weather = 0
-        self.min_records = []
-        self.valid_for_use = False
-        self.exclusion_reason = "UNINITIALIZED"
-
-    def initialize(
+    def __init__(
         self,
         night_date: Time,
         night_file: str,
@@ -196,7 +181,8 @@ class NightRecord:
                     ]
                     new_file.write(";".join(vals) + "\n")
 
-    def rec_import(self, filename: str):
+class InheritedNightRecord(NewNightRecord):
+    def __init__(self, filename: str):
         """
         Import previously exported night record.
         """
@@ -235,13 +221,12 @@ class NightRecord:
                     p_str = file.readline()
 
 
-def core_framework_tests():
+def print_example():
     """
     Prints results of the struct creation on a small sample file.
     """
-    # run with "python correction_framework.py core_framework_tests" on
+    # run with "python night_record.py print_example" on
     # command line
-    n_rec = NightRecord()
 
     print("starting simple test:")
     """
@@ -252,7 +237,7 @@ def core_framework_tests():
     PM CT/11:32 PM UTC in Hyde Park
     """
     print("working directory: " + os.getcwd() + "\n")
-    n_rec.initialize(
+    n_rec = NewNightRecord(
         Time("2023-01-24 12:00:00.000"),
         "./test_files/simple_test_night.txt",
         Time("2023-01-25 12:00:00.000"),
