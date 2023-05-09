@@ -181,6 +181,7 @@ class NewNightRecord:
                     ]
                     new_file.write(";".join(vals) + "\n")
 
+
 class InheritedNightRecord(NewNightRecord):
     def __init__(self, filename: str):
         """
