@@ -6,6 +6,7 @@ and access that file.
 
 from pydrive2.auth import GoogleAuth
 from pydrive2.drive import GoogleDrive
+from oauth2client.service_account import ServiceAccountCredentials
 
 FOLDER_ID_LENSS_TSL_002 = "1jr5G9i0_Qa9kgXbaaWolglRNEgz6OMl3"
 
@@ -17,20 +18,12 @@ class GoogleDocs:
     """
 
     def __init__(self):
+        scope = ["https://www.googleapis.com/auth/drive"]
         g_auth = GoogleAuth()
-        g_auth.LoadCredentialsFile("../client_secrets.json")
-        if g_auth.credentials is None:
-            # Authenticate if they're not there
-            g_auth.LocalWebserverAuth()
-        elif g_auth.access_token_expired:
-            # Refresh them if expired
-            g_auth.Refresh()
-        else:
-            # Initialize the saved creds
-            g_auth.Authorize()
-        # Save the current credentials to a file
-        g_auth.SaveCredentialsFile("../google_credentials.txt")
-
+        g_auth.auth_method = "service"
+        g_auth.credentials = ServiceAccountCredentials.from_json_keyfile_name(
+            "client_secrets.json", scope
+        )
         self.drive = GoogleDrive(g_auth)
 
     def does_file_exist(self, file_name: str):
