@@ -27,8 +27,8 @@ def main():
     morning_date = today - timedelta(days=1)
     morning_str = morning_date.strftime("%Y-%m-%d")
 
-    night_file = night_str + "_" + SENSORNAME + ".txt"
-    morning_file = morning_str + "_" + SENSORNAME + ".txt"
+    night_file = night_str + "_" + SENSOR_NAME + ".txt"
+    morning_file = morning_str + "_" + SENSOR_NAME + ".txt"
 
     nrec = NewNightRecord(
         Time(night_str + " 12:00:00.0"),
@@ -47,6 +47,7 @@ def main():
     for funct in cor_to_apply:
         nrec.apply_correction(funct[0], funct[1])
 
+    # add directory to file path if necessary
     nrec.rec_export(
-        night_str + " to " + morning_str + +" " + SENSORNAME + ".txt"
+        night_str + " to " + morning_str + " " + SENSOR_NAME + ".txt"
     )
