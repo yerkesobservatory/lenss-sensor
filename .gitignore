@@ -132,6 +132,7 @@ celerybeat.pid
 
 # Environments
 client_secrets.json
+google_credentials.txt
 .venv
 env/
 venv/
