@@ -8,6 +8,7 @@ from pydrive2.auth import GoogleAuth
 from pydrive2.drive import GoogleDrive
 from oauth2client.service_account import ServiceAccountCredentials
 
+
 class GoogleDocs:
     """
     This class is the abstraction that will be used to access Google Doc
@@ -58,12 +59,12 @@ class GoogleDocs:
         """
 
         if not self.does_file_exist(file_name):
-            return {}
+            return []
 
         gcp_file = self.drive.ListFile(
             {"q": f"title = '{file_name}' and mimeType='text/plain'"}
         ).GetList()[0]
 
-        file = self.drive.CreateFile({'id': gcp_file['id']})
+        file = self.drive.CreateFile({"id": gcp_file["id"]})
 
         return file.GetContentString().split("\r\n")
