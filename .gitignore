@@ -131,7 +131,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+client_secrets.json
+google_credentials.txt
 .venv
 env/
 venv/
