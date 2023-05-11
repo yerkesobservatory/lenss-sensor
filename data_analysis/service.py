@@ -48,6 +48,7 @@ def main():
         nrec.apply_correction(funct[0], funct[1])
 
     # add directory to file path if necessary
+    # currently exports locally
     nrec.rec_export(
         night_str + " to " + morning_str + " " + SENSOR_NAME + ".txt"
     )

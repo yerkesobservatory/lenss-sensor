@@ -1,9 +1,11 @@
 """
-TODO: File level docstring.
+Defines structs for manipulating data in memory.
 """
 
 import sys
 import os
+
+from ..external.google_docs import GoogleDocs 
 
 import astropy.units as u
 from astroplan import Observer
@@ -71,51 +73,46 @@ class NewNightRecord:
         self.moon_illumination = sensor.moon_illumination(
             self.astronomical_twilight
         )
-        # future TODO: store nightly weather
-
+        
+        docs = GoogleDocs()
         self.min_records = []
-
+        
         # example line from 2023-01-23_LENSSTSL0008.txt:
         # 2023-01-23T06:00:00.992;2023-01-23T00:00:00.992;0.38;4.39;0.0;LENSS_TSL_0008
         # UTC Time; Local Time; Temperature (C); Frequency; Voltage; ID
-        with open(night_file) as n_file:
-            trans_str = n_file.readline()
-            while len(trans_str) != 0:
-                data = trans_str.split(";")
-                data[0] = data[0].replace("T", " ")
-                data[1] = data[1].replace("T", " ")
-                m_rec = MinuteRecord(
-                    Time(data[0]),
-                    Time(data[1]),
-                    float(data[2]),
-                    float(data[3]),
-                    float(data[4]),
-                    data[5],
-                )
-                if m_rec.utc_time < self.sunset:
-                    trans_str = n_file.readline()
-                    continue
-                self.min_records.append(m_rec)
-                trans_str = n_file.readline()
+        n_lines = docs.get_file(night_file)
+        for line in n_lines:
+            data = line.split(";")
+            data[0] = data[0].replace("T", " ")
+            data[1] = data[1].replace("T", " ")
+            m_rec = MinuteRecord(
+                Time(data[0]),
+                Time(data[1]),
+                float(data[2]),
+                float(data[3]),
+                float(data[4]),
+                data[5],
+            )
+            if m_rec.utc_time < self.sunset:
+                continue
+            self.min_records.append(m_rec)
 
-        with open(morning_file) as m_file:
-            trans_str = m_file.readline()
-            while len(trans_str) != 0:
-                data = trans_str.split(";")
-                data[0] = data[0].replace("T", " ")
-                data[1] = data[1].replace("T", " ")
-                m_rec = MinuteRecord(
-                    Time(data[0]),
-                    Time(data[1]),
-                    float(data[2]),
-                    float(data[3]),
-                    float(data[4]),
-                    data[5],
-                )
-                if m_rec.utc_time > self.sunrise:
-                    break
-                self.min_records.append(m_rec)
-                trans_str = m_file.readline()
+        m_lines = docs.get_file(morning_file)
+        for line in n_lines:
+            data = line.split(";")
+            data[0] = data[0].replace("T", " ")
+            data[1] = data[1].replace("T", " ")
+            m_rec = MinuteRecord(
+                Time(data[0]),
+                Time(data[1]),
+                float(data[2]),
+                float(data[3]),
+                float(data[4]),
+                data[5],
+            )
+            if m_rec.utc_time > self.sunrise:
+                break
+            self.min_records.append(m_rec)
 
         self.valid_for_use = True
         self.exclusion_reason = "None"
@@ -156,6 +153,9 @@ class NewNightRecord:
         """
         Export night record to a new file.
         """
+        # has not been updated to GDoc implementation since there is no
+        # way to export a file there yet.
+
         with open(filename, "x") as new_file:
             if not self.valid_for_use:
                 new_file.write("INVALID\n" + self.exclusion_reason)
@@ -187,6 +187,9 @@ class InheritedNightRecord(NewNightRecord):
         """
         Import previously exported night record.
         """
+        # has not been updated to GDoc implementation since there is no
+        # way to export a file there to read from yet.
+
         # takes an already created object and updates it to imported values
         with open(filename) as file:
             p_str = file.readline()
@@ -227,7 +230,9 @@ def print_example():
     Prints results of the struct creation on a small sample file.
     """
     # run with "python night_record.py print_example" on
-    # command line
+    # command line -- out of date; see below
+    # NOTE: can no longer run: ran on NewNightRecord with local file 
+    # implementation rather than GDoc implementation; now kept as an example
 
     print("starting simple test:")
     """
@@ -237,6 +242,7 @@ def print_example():
     UTC, and astronomical twilight is between 05:59 PM CT/10:59 PM UTC and 6:32 
     PM CT/11:32 PM UTC in Hyde Park
     """
+    
     print("working directory: " + os.getcwd() + "\n")
     n_rec = NewNightRecord(
         Time("2023-01-24 12:00:00.000"),
