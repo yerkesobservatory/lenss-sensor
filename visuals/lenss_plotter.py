@@ -10,6 +10,7 @@ from astroplan import Observer
 from astropy.time import Time
 
 from abstract_visualization import Visualization
+from external.google_docs import GoogleDocs
 
 
 class LENSSPlotter(Visualization):
