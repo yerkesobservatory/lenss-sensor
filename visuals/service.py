@@ -51,26 +51,5 @@ def main():
         ).create_visual()
 
 
-def google_client():
-    """
-    Returns a google client.
-    """
-    return {}
-
-
-def verify_file(folder: str, file_name: str):
-    """
-    Returns boolean saying if the file exists or not.
-    """
-    return True
-
-
-def get_file(folder: str, file_name: str):
-    """
-    Returns a file object for given folder and file_name
-    """
-    return True
-
-
 if __name__ == "__main__":
     main()
