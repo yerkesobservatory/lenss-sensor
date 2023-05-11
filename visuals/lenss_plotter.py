@@ -55,9 +55,13 @@ class LENSSPlotter(Visualization):
         relevant sensor data text file for the given night and the following
         morning from Google Drive.
         """
-        folder = "../streamlit/files/"
-        file_path_morn = folder + self.morning_file
-        file_path_eve = folder + self.evening_file
+        docs = GoogleDocs()
+        mfile = docs.get_file(self.morning_file + ".txt")
+        efile = docs.get_file(self.evening_file + ".txt")
+
+        #folder = "../streamlit/files/"
+        #file_path_morn = folder + self.morning_file
+        #file_path_eve = folder + self.evening_file
 
         col_names = [
             "Time (UTC)",
@@ -68,10 +72,10 @@ class LENSSPlotter(Visualization):
             "Sensor",
         ]
         df_morn = pd.read_csv(
-            file_path_morn, low_memory=False, sep=";", names=col_names
+            mfile, low_memory=False, sep=";", names=col_names
         )
         df_eve = pd.read_csv(
-            file_path_eve, low_memory=False, sep=";", names=col_names
+            efile, low_memory=False, sep=";", names=col_names
         )
 
         return df_morn, df_eve
