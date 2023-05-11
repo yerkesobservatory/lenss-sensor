@@ -1,6 +1,7 @@
 from datetime import datetime, time
 
 import astropy.units as astro_units
+import io
 import julian
 import pandas as pd
 import plotly.graph_objs as go
@@ -57,12 +58,8 @@ class LENSSPlotter(Visualization):
         morning from Google Drive.
         """
         docs = GoogleDocs()
-        mfile = docs.get_file(self.morning_file + ".txt")
-        efile = docs.get_file(self.evening_file + ".txt")
-
-        # folder = "../streamlit/files/"
-        # file_path_morn = folder + self.morning_file
-        # file_path_eve = folder + self.evening_file
+        mlist = docs.get_file(self.morning_file)
+        elist = docs.get_file(self.evening_file)
 
         col_names = [
             "Time (UTC)",
@@ -72,8 +69,8 @@ class LENSSPlotter(Visualization):
             "Voltage",
             "Sensor",
         ]
-        df_morn = pd.read_csv(mfile, low_memory=False, sep=";", names=col_names)
-        df_eve = pd.read_csv(efile, low_memory=False, sep=";", names=col_names)
+        df_morn = pd.read_csv(io.StringIO('\n'.join(mlist)), sep=';', names=col_names)
+        df_eve = pd.read_csv(io.StringIO('\n'.join(elist)), sep=';', names=col_names)
 
         return df_morn, df_eve
 

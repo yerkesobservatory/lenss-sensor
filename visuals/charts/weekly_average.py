@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+import io
 import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
@@ -7,7 +8,7 @@ import plotly.offline as pyo
 import requests
 
 from visuals.charts.abstract_visualization import Visualization
-
+from external.google_docs import GoogleDocs
 
 class WeeklyAverage(Visualization):
     """
@@ -42,8 +43,6 @@ class WeeklyAverage(Visualization):
         text files for every night in the given range from Google Drive and
         combines the data into one dataframe.
         """
-        folder = "../streamlit/files/"
-
         start = datetime.strptime(self.start_date, "%Y-%m-%d")
         end = datetime.strptime(self.end_date, "%Y-%m-%d")
         delta = timedelta(days=1)
@@ -68,17 +67,19 @@ class WeeklyAverage(Visualization):
             "Voltage",
             "Sensor",
         ]
-        first_night = folder + filepaths[0]
+        docs = GoogleDocs()
+        first_night = docs.get_file(filepaths[0])
         df = pd.read_csv(
-            first_night, low_memory=False, sep=";", names=col_names
+            io.StringIO('\n'.join(first_night)), sep=';', names=col_names
         )
         self._parse_data(df)
         df = df[(df["Time (CST)"].dt.hour >= 22)]
 
         for path in filepaths[1:-1]:
-            current = folder + path
+            docs = GoogleDocs()
+            current = docs.get_file(path)
             curr_df = pd.read_csv(
-                current, low_memory=False, sep=";", names=col_names
+                io.StringIO('\n'.join(current)), sep=';', names=col_names
             )
             self._parse_data(curr_df)
             curr_df = curr_df[
@@ -87,9 +88,9 @@ class WeeklyAverage(Visualization):
             ]
             df = pd.concat([df, curr_df])
 
-        last_morning = folder + filepaths[-1]
+        last_morning = docs.get_file(filepaths[-1])
         curr_df = pd.read_csv(
-            last_morning, low_memory=False, sep=";", names=col_names
+            io.StringIO('\n'.join(last_morning)), sep=';', names=col_names
         )
         self._parse_data(curr_df)
         curr_df = curr_df[(curr_df["Time (CST)"].dt.hour < 4)]

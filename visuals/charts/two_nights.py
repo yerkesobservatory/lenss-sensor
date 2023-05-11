@@ -1,6 +1,7 @@
 from datetime import datetime, time
 
 import astropy.units as astro_units
+import io
 import julian
 import pandas as pd
 import plotly.graph_objs as go
@@ -10,6 +11,7 @@ from astroplan import Observer
 from astropy.time import Time
 
 from visuals.charts.abstract_visualization import Visualization
+from external.google_docs import GoogleDocs
 
 
 class TwoNights(Visualization):
@@ -64,12 +66,12 @@ class TwoNights(Visualization):
         This method pulls the relevant sensor data file for the given night
         and the following morning from Google Drive.
         """
-        folder = "../streamlit/files/"
-        file_path_morn1 = folder + self.morning_file1
-        file_path_eve1 = folder + self.evening_file1
+        docs = GoogleDocs()
+        mlist1 = docs.get_file(self.morning_file1)
+        elist1 = docs.get_file(self.evening_file1)
 
-        file_path_morn2 = folder + self.morning_file2
-        file_path_eve2 = folder + self.evening_file2
+        mlist2 = docs.get_file(self.morning_file2)
+        elist2 = docs.get_file(self.evening_file2)
 
         col_names = [
             "Time (UTC)",
@@ -80,17 +82,17 @@ class TwoNights(Visualization):
             "Sensor",
         ]
         df_morn1 = pd.read_csv(
-            file_path_morn1, low_memory=False, sep=";", names=col_names
+            io.StringIO('\n'.join(mlist1)), sep=';', names=col_names
         )
         df_eve1 = pd.read_csv(
-            file_path_eve1, low_memory=False, sep=";", names=col_names
+            io.StringIO('\n'.join(elist1)), sep=';', names=col_names
         )
 
         df_morn2 = pd.read_csv(
-            file_path_morn2, low_memory=False, sep=";", names=col_names
+            io.StringIO('\n'.join(mlist2)), sep=';', names=col_names
         )
         df_eve2 = pd.read_csv(
-            file_path_eve2, low_memory=False, sep=";", names=col_names
+            io.StringIO('\n'.join(elist2)), sep=';', names=col_names
         )
 
         return df_morn1, df_eve1, df_morn2, df_eve2
