@@ -155,6 +155,7 @@ class NewNightRecord:
         """
         # has not been updated to GDoc implementation since there is no
         # way to export a file there yet.
+        # TODO: will likely need to add directories to file path
 
         with open(filename, "x") as new_file:
             if not self.valid_for_use:

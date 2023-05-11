@@ -27,6 +27,7 @@ def main():
     morning_date = today - timedelta(days=1)
     morning_str = morning_date.strftime("%Y-%m-%d")
 
+    # TODO: will likely need to add directories to file path
     night_file = night_str + "_" + SENSOR_NAME + ".txt"
     morning_file = morning_str + "_" + SENSOR_NAME + ".txt"
 
