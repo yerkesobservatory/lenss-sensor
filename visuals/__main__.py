@@ -3,9 +3,9 @@ This file serves as the central runner for data-visualizations for the
 Spring '23 Metcalf Clinic LENSS project.
 """
 
-from visuals.lenss_plotter import LENSSPlotter
-from visuals.two_nights import TwoNights
-from visuals.weekly_average import WeeklyAverage
+from visuals.charts.lenss_plotter import LENSSPlotter
+from visuals.charts.two_nights import TwoNights
+from visuals.charts.weekly_average import WeeklyAverage
 
 
 def main():

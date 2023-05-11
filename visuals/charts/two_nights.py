@@ -9,7 +9,7 @@ import requests
 from astroplan import Observer
 from astropy.time import Time
 
-from abstract_visualization import Visualization
+from visuals.charts.abstract_visualization import Visualization
 
 
 class TwoNights(Visualization):

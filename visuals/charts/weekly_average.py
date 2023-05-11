@@ -6,7 +6,7 @@ import plotly.graph_objs as go
 import plotly.offline as pyo
 import requests
 
-from abstract_visualization import Visualization
+from visuals.charts.abstract_visualization import Visualization
 
 
 class WeeklyAverage(Visualization):
