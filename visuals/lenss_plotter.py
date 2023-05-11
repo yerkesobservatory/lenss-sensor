@@ -60,9 +60,9 @@ class LENSSPlotter(Visualization):
         mfile = docs.get_file(self.morning_file + ".txt")
         efile = docs.get_file(self.evening_file + ".txt")
 
-        #folder = "../streamlit/files/"
-        #file_path_morn = folder + self.morning_file
-        #file_path_eve = folder + self.evening_file
+        # folder = "../streamlit/files/"
+        # file_path_morn = folder + self.morning_file
+        # file_path_eve = folder + self.evening_file
 
         col_names = [
             "Time (UTC)",
@@ -72,12 +72,8 @@ class LENSSPlotter(Visualization):
             "Voltage",
             "Sensor",
         ]
-        df_morn = pd.read_csv(
-            mfile, low_memory=False, sep=";", names=col_names
-        )
-        df_eve = pd.read_csv(
-            efile, low_memory=False, sep=";", names=col_names
-        )
+        df_morn = pd.read_csv(mfile, low_memory=False, sep=";", names=col_names)
+        df_eve = pd.read_csv(efile, low_memory=False, sep=";", names=col_names)
 
         return df_morn, df_eve
 
