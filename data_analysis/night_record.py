@@ -5,7 +5,7 @@ Defines structs for manipulating data in memory.
 import sys
 import os
 
-from ..external.google_docs import GoogleDocs 
+from ..external.google_docs import GoogleDocs
 
 import astropy.units as u
 from astroplan import Observer
@@ -73,10 +73,10 @@ class NewNightRecord:
         self.moon_illumination = sensor.moon_illumination(
             self.astronomical_twilight
         )
-        
+
         docs = GoogleDocs()
         self.min_records = []
-        
+
         # example line from 2023-01-23_LENSSTSL0008.txt:
         # 2023-01-23T06:00:00.992;2023-01-23T00:00:00.992;0.38;4.39;0.0;LENSS_TSL_0008
         # UTC Time; Local Time; Temperature (C); Frequency; Voltage; ID
@@ -232,7 +232,7 @@ def print_example():
     """
     # run with "python night_record.py print_example" on
     # command line -- out of date; see below
-    # NOTE: can no longer run: ran on NewNightRecord with local file 
+    # NOTE: can no longer run: ran on NewNightRecord with local file
     # implementation rather than GDoc implementation; now kept as an example
 
     print("starting simple test:")
@@ -243,7 +243,7 @@ def print_example():
     UTC, and astronomical twilight is between 05:59 PM CT/10:59 PM UTC and 6:32 
     PM CT/11:32 PM UTC in Hyde Park
     """
-    
+
     print("working directory: " + os.getcwd() + "\n")
     n_rec = NewNightRecord(
         Time("2023-01-24 12:00:00.000"),
