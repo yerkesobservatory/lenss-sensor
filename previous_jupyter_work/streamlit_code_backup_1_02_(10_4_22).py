@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numpy import random as r
 import csv
-import streamlit as st
+import previous_jupyter_work as st
 import plotly.express as px
 from datetime import datetime
 from datetime import timedelta
