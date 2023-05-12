@@ -28,7 +28,6 @@ class WeeklyAverage(Visualization):
     ):
         self.end_date = end_date
 
-        self.google_docs = GoogleDocs()
         self.sensor_string = "{:02d}".format(sensor_number)
         start_date = datetime.strptime(end_date[:10],
                                        '%Y-%m-%d') - relativedelta(months=6)
@@ -53,6 +52,7 @@ class WeeklyAverage(Visualization):
         end = datetime.strptime(self.end_date, "%Y-%m-%d")
         delta = timedelta(days=1)
         filepaths = []
+        google_docs = GoogleDocs()
 
         while start <= end:
             filepaths.append(
@@ -69,7 +69,7 @@ class WeeklyAverage(Visualization):
             "Voltage",
             "Sensor",
         ]
-        first_night = self.google_docs.get_file(filepaths[0])
+        first_night = google_docs.get_file(filepaths[0])
         df = pd.read_csv(
             io.StringIO('\n'.join(first_night)), sep=';', names=col_names
         )
@@ -77,7 +77,7 @@ class WeeklyAverage(Visualization):
         df = df[(df["Time (CST)"].dt.hour >= 22)]
 
         for path in filepaths[1:-1]:
-            current = self.google_docs.get_file(path)
+            current = google_docs.get_file(path)
             curr_df = pd.read_csv(
                 io.StringIO('\n'.join(current)), sep=';', names=col_names
             )
@@ -88,7 +88,7 @@ class WeeklyAverage(Visualization):
                 ]
             df = pd.concat([df, curr_df])
 
-        last_morning = self.google_docs.get_file(filepaths[-1])
+        last_morning = google_docs.get_file(filepaths[-1])
         curr_df = pd.read_csv(
             io.StringIO('\n'.join(last_morning)), sep=';', names=col_names
         )
