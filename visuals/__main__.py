@@ -42,9 +42,7 @@ def main():
         ).create_visual()
 
     if make_weekly_average:
-        WeeklyAverage(
-            "2023-1-23", 42.57, -88.542, 8
-        ).create_visual()
+        WeeklyAverage("2023-1-23", 42.57, -88.542, 8).create_visual()
 
 
 if __name__ == "__main__":
