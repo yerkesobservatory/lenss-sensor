@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from dateutil.relativedelta import *
 
 import io
 import numpy as np
@@ -13,20 +14,22 @@ from external.google_docs import GoogleDocs
 class WeeklyAverage(Visualization):
     """
     This file contains the functions for creating a graph of the average
-    frequency of light detected by the sensor each week within a given time
-    range, overlaid with data on the weekly total snowfall in the area.
+    frequency of light detected by the sensor each week for the past six months,
+    given an end date, overlaid with data on the weekly total snowfall in the area.
     """
 
     def __init__(
         self,
-        start_date,
         end_date,
         sensor_latitude,
         sensor_longitude,
         sensor_number,
     ):
-        self.start_date = start_date
         self.end_date = end_date
+        
+        sensor_string = "{:02d}".format(sensor_number)
+        start_date = datetime.strptime(end_date[:10], '%Y-%m-%d') - relativedelta(months=6)
+        self.start_date = datetime.strftime(start_date, '%Y-%m-%d')
 
         self.sensor_latitude = sensor_latitude
         self.sensor_longitude = sensor_longitude
@@ -48,14 +51,11 @@ class WeeklyAverage(Visualization):
         delta = timedelta(days=1)
         filepaths = []
 
-        if self.sensor_number < 10:
-            sensor_num = "0" + str(self.sensor_number)
-        else:
-            sensor_num = str(self.sensor_number)
+        sensor_string = "{:02d}".format(self.sensor_number)
 
         while start <= end:
             filepaths.append(
-                start.strftime("%Y-%m-%d") + "_LENSSTSL00" + sensor_num + ".txt"
+                start.strftime("%Y-%m-%d") + "_LENSSTSL00" + sensor_string + ".txt"
             )
             start += delta
 

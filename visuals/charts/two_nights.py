@@ -1,4 +1,5 @@
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
+from dateutil.relativedelta import *
 
 import astropy.units as astro_units
 import io
@@ -18,24 +19,30 @@ class TwoNights(Visualization):
     """
     This file contains the functions for creating a graph that overlays the
     light frequency and temperature data from a sensor from two different
-    nights.
+    nights. Given a starting night, the second night is chosen to be three 
+    months before that.
     """
 
     def __init__(
         self,
         evening_file1,
-        morning_file1,
-        evening_file2,
-        morning_file2,
         sensor_latitude,
         sensor_longitude,
         sensor_number,
     ):
         self.evening_file1 = evening_file1
-        self.morning_file1 = morning_file1
 
-        self.evening_file2 = evening_file2
-        self.morning_file2 = morning_file2
+        sensor_string = "{:02d}".format(sensor_number)
+
+        morning1 = datetime.strptime(evening_file1[:10], '%Y-%m-%d') + timedelta(days=1)
+        self.morning_file1 = datetime.strftime(morning1, '%Y-%m-%d') + "_LENSSTSL00" + sensor_string + ".txt"
+        
+        evening2 = datetime.strptime(evening_file1[:10], '%Y-%m-%d') - relativedelta(months=3)
+        morning2 = evening2 + timedelta(days=1)
+        evening_file2 = datetime.strftime(evening2, '%Y-%m-%d') 
+        morning_file2 = datetime.strftime(morning2, '%Y-%m-%d')
+        self.evening_file2 = evening_file2 + "_LENSSTSL00" + sensor_string + ".txt"
+        self.morning_file2 = morning_file2 + "_LENSSTSL00" + sensor_string + ".txt"
 
         self.sensor_latitude = sensor_latitude
         self.sensor_longitude = sensor_longitude

@@ -1,4 +1,4 @@
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 
 import astropy.units as astro_units
 import io
@@ -25,13 +25,14 @@ class LENSSPlotter(Visualization):
     def __init__(
         self,
         evening_file,
-        morning_file,
         sensor_latitude,
         sensor_longitude,
         sensor_number,
     ):
         self.evening_file = evening_file
-        self.morning_file = morning_file
+        sensor_string = "{:02d}".format(sensor_number)
+        morn_date = datetime.strptime(evening_file[:10], '%Y-%m-%d') + timedelta(days=1)
+        self.morning_file = datetime.strftime(morn_date,'%Y-%m-%d') + "_LENSSTSL00" + sensor_string + ".txt"
 
         self.sensor_latitude = sensor_latitude
         self.sensor_longitude = sensor_longitude
