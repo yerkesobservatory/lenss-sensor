@@ -3,7 +3,6 @@ This file serves as the central runner for any data analysis processes.
 """
 
 from night_record import NewNightRecord
-from night_record import PROJECT_DATE_FORMAT
 from astropy.time import Time
 from datetime import datetime
 from datetime import timedelta
