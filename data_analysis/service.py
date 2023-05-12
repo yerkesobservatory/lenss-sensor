@@ -9,8 +9,8 @@ from datetime import timedelta
 
 # must be externally supplied
 SENSOR_NAME = "LENSSTSL0008"
-SENSOR_LAT
-SENSOR_LONG
+SENSOR_LAT = 42.57
+SENSOR_LONG = -88.542
 
 # define correction functions here
 
