@@ -9,7 +9,7 @@ from datetime import datetime
 from datetime import timedelta
 
 # must be externally supplied
-SENSOR_NAME
+SENSOR_NAME = "LENSSTSL0008"
 SENSOR_LAT
 SENSOR_LONG
 
