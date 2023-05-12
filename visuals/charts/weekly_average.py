@@ -11,6 +11,7 @@ import requests
 from visuals.charts.abstract_visualization import Visualization
 from external.google_docs import GoogleDocs
 
+
 class WeeklyAverage(Visualization):
     """
     This file contains the functions for creating a graph of the average
@@ -19,16 +20,18 @@ class WeeklyAverage(Visualization):
     """
 
     def __init__(
-        self,
-        end_date,
-        sensor_latitude,
-        sensor_longitude,
-        sensor_number,
+            self,
+            end_date,
+            sensor_latitude,
+            sensor_longitude,
+            sensor_number,
     ):
         self.end_date = end_date
-        
-        sensor_string = "{:02d}".format(sensor_number)
-        start_date = datetime.strptime(end_date[:10], '%Y-%m-%d') - relativedelta(months=6)
+
+        self.google_docs = GoogleDocs()
+        self.sensor_string = "{:02d}".format(sensor_number)
+        start_date = datetime.strptime(end_date[:10],
+                                       '%Y-%m-%d') - relativedelta(months=6)
         self.start_date = datetime.strftime(start_date, '%Y-%m-%d')
 
         self.sensor_latitude = sensor_latitude
@@ -51,11 +54,10 @@ class WeeklyAverage(Visualization):
         delta = timedelta(days=1)
         filepaths = []
 
-        sensor_string = "{:02d}".format(self.sensor_number)
-
         while start <= end:
             filepaths.append(
-                start.strftime("%Y-%m-%d") + "_LENSSTSL00" + sensor_string + ".txt"
+                start.strftime(
+                    "%Y-%m-%d") + "_LENSSTSL00" + self.sensor_string + ".txt"
             )
             start += delta
 
@@ -67,8 +69,7 @@ class WeeklyAverage(Visualization):
             "Voltage",
             "Sensor",
         ]
-        docs = GoogleDocs()
-        first_night = docs.get_file(filepaths[0])
+        first_night = self.google_docs.get_file(filepaths[0])
         df = pd.read_csv(
             io.StringIO('\n'.join(first_night)), sep=';', names=col_names
         )
@@ -76,8 +77,7 @@ class WeeklyAverage(Visualization):
         df = df[(df["Time (CST)"].dt.hour >= 22)]
 
         for path in filepaths[1:-1]:
-            docs = GoogleDocs()
-            current = docs.get_file(path)
+            current = self.google_docs.get_file(path)
             curr_df = pd.read_csv(
                 io.StringIO('\n'.join(current)), sep=';', names=col_names
             )
@@ -85,10 +85,10 @@ class WeeklyAverage(Visualization):
             curr_df = curr_df[
                 (curr_df["Time (CST)"].dt.hour >= 22)
                 | (curr_df["Time (CST)"].dt.hour < 4)
-            ]
+                ]
             df = pd.concat([df, curr_df])
 
-        last_morning = docs.get_file(filepaths[-1])
+        last_morning = self.google_docs.get_file(filepaths[-1])
         curr_df = pd.read_csv(
             io.StringIO('\n'.join(last_morning)), sep=';', names=col_names
         )
@@ -188,8 +188,8 @@ class WeeklyAverage(Visualization):
         data = [trace1, trace2]
         layout = go.Layout(
             title=f"{self.start_date} to {self.end_date}: Weekly Average "
-            f"Frequency of Sensor {self.sensor_number} Dark Sky "
-            f"Observations",
+                  f"Frequency of Sensor {self.sensor_number} Dark Sky "
+                  f"Observations",
             xaxis=dict(title="Week"),
             yaxis=dict(title="Average Light Frequency", side="left"),
             yaxis2=dict(
