@@ -13,6 +13,7 @@ from astropy.time import Time
 
 PROJECT_DATE_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
+
 class MinuteRecord:
     def __init__(
         self,
@@ -96,7 +97,7 @@ class NewNightRecord:
                 continue
             self.min_records.append(m_rec)
 
-        m_lines = docs.get_file(morning_file)
+        docs.get_file(morning_file)
         for line in n_lines:
             data = line.split(";")
             data[0] = data[0].replace("T", " ")
@@ -180,7 +181,7 @@ class NewNightRecord:
                     file_text = file_text + line + "\n"
 
         docs = GoogleDocs()
-        docs.push_file(file_name, file_text)        
+        docs.push_file(file_name, file_text)
 
 
 class InheritedNightRecord(NewNightRecord):
@@ -194,7 +195,7 @@ class InheritedNightRecord(NewNightRecord):
         if f_lines[0] == "INVALID":
             self.valid_for_use = False
             self.exclusion_reason = f_lines[1]
-        else: 
+        else:
             # night date -- 2023-01-23 06:00:00.992
             self.night_date = Time(f_lines[0])
             # morning date
@@ -220,7 +221,7 @@ class InheritedNightRecord(NewNightRecord):
                     data[5],
                 )
                 self.min_records.append(m_rec)
-                i += 1     
+                i += 1
 
         self.valid_for_use = True
         self.exclusion_reason = "None"
@@ -298,8 +299,8 @@ def print_example_dead():
     )
 
     print("exclusion should be none: " + n_rec.exclusion_reason)
-    
-    #Everything looks good!
+
+    # Everything looks good!
 
 
 if __name__ == "__main__":

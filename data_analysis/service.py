@@ -20,6 +20,7 @@ SENSOR_LONG = -88.542
 # define correction functions here
 # then add to list of corrects to automatically run
 
+
 def main():
     """
     This function is the central function for any data analysis or cleaning
