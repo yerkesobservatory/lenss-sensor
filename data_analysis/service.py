@@ -14,6 +14,8 @@ SENSOR_NAME = "LENSS_TSL_0008"
 # may want to set to for each sensor's exact location in the future
 SENSOR_LAT = 42.57
 SENSOR_LONG = -88.542
+# TODO: may want to define and add the correct directories to retrieve
+# and write files here and in the main function
 
 # define correction functions here
 # then add to list of corrects to automatically run
@@ -49,6 +51,8 @@ def main():
     for funct in cor_to_apply:
         nrec.apply_correction(funct[0], funct[1])
 
+    # returns false on failure; may want to set up some kind of alert in case
+    # of failure once automated
     nrec.rec_export(
         night_str + " to " + morning_str + " " + SENSOR_NAME + ".txt"
     )

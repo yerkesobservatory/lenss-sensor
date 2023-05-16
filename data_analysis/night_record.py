@@ -13,8 +13,6 @@ from astropy.time import Time
 
 PROJECT_DATE_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
 
-#TODO: ADD DIRECTORIES ONCE YOU ORIENT WHERE DEFAULT IS
-
 class MinuteRecord:
     def __init__(
         self,
