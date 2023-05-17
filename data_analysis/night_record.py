@@ -97,8 +97,8 @@ class NewNightRecord:
                 continue
             self.min_records.append(m_rec)
 
-        docs.get_file(morning_file)
-        for line in n_lines:
+        m_lines = docs.get_file(morning_file)
+        for line in m_lines:
             data = line.split(";")
             data[0] = data[0].replace("T", " ")
             data[1] = data[1].replace("T", " ")
