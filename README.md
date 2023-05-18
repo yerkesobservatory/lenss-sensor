@@ -25,6 +25,9 @@ This project contains code and documentation for the LENSS-Sensor being develope
   * server: programs operated on the central LENSShost server
     * watchdog: programs used for the monitoring of sensor operations
       * watchdog.py: accesses LENSS Google Drive folder to record which sensors uploaded the previous night; this record is the emailed to developers on the program's mailing list
+  * data_analysis: contains the functions for automated data correction
+    * service.py: contains the code to run for automation
+    * night_record.py: contains relevant class definitions and functions
   * zArchive: miscellaneous outdated codes; the z keeps it at the back of alphabetical lists
   * .gitignore: list of files such as tokens and api keys that git will not track
 

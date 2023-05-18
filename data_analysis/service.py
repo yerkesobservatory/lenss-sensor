@@ -7,12 +7,18 @@ from astropy.time import Time
 from datetime import datetime
 from datetime import timedelta
 
-# must be externally supplied
-SENSOR_NAME = "LENSSTSL0008"
+# this is an example; to pull from all sensor data, this will need to
+# be externally supplied by the call
+SENSOR_NAME = "LENSS_TSL_0008"
+# rough coodinates near geneva lake
+# may want to set to for each sensor's exact location in the future
 SENSOR_LAT = 42.57
 SENSOR_LONG = -88.542
+# TODO: may want to define and add the correct directories to retrieve
+# and write files here and in the main function
 
 # define correction functions here
+# then add to list of corrects to automatically run
 
 
 def main():
@@ -26,7 +32,6 @@ def main():
     morning_date = today - timedelta(days=1)
     morning_str = morning_date.strftime("%Y-%m-%d")
 
-    # TODO: will likely need to add directories to file path
     night_file = night_str + "_" + SENSOR_NAME + ".txt"
     morning_file = morning_str + "_" + SENSOR_NAME + ".txt"
 
@@ -47,8 +52,8 @@ def main():
     for funct in cor_to_apply:
         nrec.apply_correction(funct[0], funct[1])
 
-    # add directory to file path if necessary
-    # currently exports locally
+    # returns false on failure; may want to set up some kind of alert in case
+    # of failure once automated
     nrec.rec_export(
         night_str + " to " + morning_str + " " + SENSOR_NAME + ".txt"
     )
