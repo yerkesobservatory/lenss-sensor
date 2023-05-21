@@ -47,8 +47,8 @@ class GoogleDocs:
 
     def get_file(self, file_name: str):
         """
-        This function takes in a file's folder and its name and returns a file
-        object.
+        This function takes in a file's name and returns the
+        text of the requested file.
 
         Inputs:
             folder (str): the desired folder
@@ -68,3 +68,26 @@ class GoogleDocs:
         file = self.drive.CreateFile({"id": gcp_file["id"]})
 
         return file.GetContentString().split("\r\n")
+    
+    def push_file(self, file_name: str, file_text: str):
+        """
+        This function takes a file name and desired content to 
+        create a file in the Google Drive.
+
+        Inputs:
+            file_name (str): the name of the desired file
+            file_text (str): the desired content of the file
+
+        Output:
+            returns true on success and false if file already 
+            exists
+        """
+
+        if self.does_file_exist(file_name):
+            return False
+        
+        file = self.CreateFile({'title': file_name})
+        file.SetContentString(file_text)
+        file.Upload()
+        return True
+

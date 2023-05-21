@@ -98,7 +98,7 @@ class NewNightRecord:
             self.min_records.append(m_rec)
 
         m_lines = docs.get_file(morning_file)
-        for line in n_lines:
+        for line in m_lines:
             data = line.split(";")
             data[0] = data[0].replace("T", " ")
             data[1] = data[1].replace("T", " ")
@@ -149,84 +149,85 @@ class NewNightRecord:
         else:
             print("error: field not recognized/field should not be updated")
 
-    def rec_export(self, filename: str):
+    def rec_export(self, file_name: str):
         """
-        Export night record to a new file.
+        Export night record to Google Drive.
         """
-        # has not been updated to GDoc implementation since there is no
-        # way to export a file there yet.
-        # TODO: will likely need to add directories to file path
+        file_text = ""
+        if not self.valid_for_use:
+            file_text = "INVALID\n" + self.exclusion_reason
+        else:
+            vals = [
+                self.night_date.strftime(PROJECT_DATE_FORMAT),
+                self.morning_date.strftime(PROJECT_DATE_FORMAT),
+                self.sunrise.strftime(PROJECT_DATE_FORMAT),
+                self.sunset.strftime(PROJECT_DATE_FORMAT),
+                self.astronomical_twilight.strftime(PROJECT_DATE_FORMAT),
+                str(self.moon_illumination),
+            ]
+            for line in vals:
+                file_text = file_text + line + "\n"
 
-        with open(filename, "x") as new_file:
-            if not self.valid_for_use:
-                new_file.write("INVALID\n" + self.exclusion_reason)
-            else:
+            for rec in self.min_records:
                 vals = [
-                    self.night_date.strftime(PROJECT_DATE_FORMAT),
-                    self.morning_date.strftime(PROJECT_DATE_FORMAT),
-                    self.sunrise.strftime(PROJECT_DATE_FORMAT),
-                    self.sunset.strftime(PROJECT_DATE_FORMAT),
-                    self.astronomical_twilight.strftime(PROJECT_DATE_FORMAT),
-                    str(self.moon_illumination),
+                    rec.utc_time.strftime(PROJECT_DATE_FORMAT),
+                    rec.local_time.strftime(PROJECT_DATE_FORMAT),
+                    str(rec.temperature),
+                    str(rec.frequency),
+                    str(rec.voltage),
+                    rec.sensor_id,
                 ]
-                new_file.write("\n".join(vals) + "\n")
+                for line in vals:
+                    file_text = file_text + line + "\n"
 
-                for rec in self.min_records:
-                    vals = [
-                        rec.utc_time.strftime(PROJECT_DATE_FORMAT),
-                        rec.local_time.strftime(PROJECT_DATE_FORMAT),
-                        str(rec.temperature),
-                        str(rec.frequency),
-                        str(rec.voltage),
-                        rec.sensor_id,
-                    ]
-                    new_file.write(";".join(vals) + "\n")
+        docs = GoogleDocs()
+        docs.push_file(file_name, file_text)
 
 
 class InheritedNightRecord(NewNightRecord):
-    def __init__(self, filename: str):
+    def __init__(self, file_name: str):
         """
         Import previously exported night record.
         """
-        # has not been updated to GDoc implementation since there is no
-        # way to export a file there to read from yet.
+        docs = GoogleDocs()
+        f_lines = docs.get_file(file_name)
 
-        # takes an already created object and updates it to imported values
-        with open(filename) as file:
-            p_str = file.readline()
-            if p_str == "INVALID":
-                self.valid_for_use = False
-                self.exclusion_reason = file.readline()
-            else:
-                # night date -- 2023-01-23 06:00:00.992
-                self.night_date = Time(p_str)
-                # morning date
-                self.morning_date = Time(file.readline())
-                # sunrise
-                self.sunrise = Time(file.readline())
-                # sunset
-                self.sunset = Time(file.readline())
-                # twilight
-                self.astronomical_twilight = Time(file.readline())
-                # illumination
-                self.moon_illumination = float(file.readline())
+        if f_lines[0] == "INVALID":
+            self.valid_for_use = False
+            self.exclusion_reason = f_lines[1]
+        else:
+            # night date -- 2023-01-23 06:00:00.992
+            self.night_date = Time(f_lines[0])
+            # morning date
+            self.morning_date = Time(f_lines[1])
+            # sunrise
+            self.sunrise = Time(f_lines[2])
+            # sunset
+            self.sunset = Time(f_lines[3])
+            # twilight
+            self.astronomical_twilight = Time(f_lines[4])
+            # illumination
+            self.moon_illumination = float(f_lines[5])
 
-                p_str = file.readline()
-                while len(p_str) != 0:
-                    data = p_str.split(";")
-                    m_rec = MinuteRecord(
-                        Time(data[0]),
-                        Time(data[1]),
-                        float(data[2]),
-                        float(data[3]),
-                        float(data[4]),
-                        data[5],
-                    )
-                    self.min_records.append(m_rec)
-                    p_str = file.readline()
+            i = 6
+            while i < f_lines.len():
+                data = f_lines[i].split(";")
+                m_rec = MinuteRecord(
+                    Time(data[0]),
+                    Time(data[1]),
+                    float(data[2]),
+                    float(data[3]),
+                    float(data[4]),
+                    data[5],
+                )
+                self.min_records.append(m_rec)
+                i += 1
+
+        self.valid_for_use = True
+        self.exclusion_reason = "None"
 
 
-def print_example():
+def print_example_dead():
     """
     Prints results of the struct creation on a small sample file.
     """
@@ -298,6 +299,8 @@ def print_example():
     )
 
     print("exclusion should be none: " + n_rec.exclusion_reason)
+
+    # Everything looks good!
 
 
 if __name__ == "__main__":
