@@ -11,46 +11,59 @@
     Authors: Joe Murphy
 """
 
+# Setup
 
-#### Setup
+# If pulled from github, delete the token file. credentials.json is connected
+# to lenss@glaseducation.org
 
-# If pulled from github, delete the token file. credentials.json is connected to lenss@glaseducation.org
-
-from __future__ import print_function #imports for Google Drive API functionality
+from __future__ import (
+    print_function,
+)  # imports for Google Drive API functionality
 import os.path
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 
-from datetime import datetime, timedelta #time based variables for search query function
+# time based variables for search query function
+from datetime import (
+    datetime,
+    timedelta,
+)
 
-import smtplib #email code imports
-import os, sys
+# email code imports
+import smtplib
+import os
+import sys
 import configparser
 from getpass import getpass
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'] #limits what email can do on google drive
-tokenfile = 'token.json'
+# limits what email can do on google drive
+SCOPES = ["https://www.googleapis.com/auth/drive.metadata.readonly"]
+tokenfile = "token.json"
 credentialsfile = sys.argv[1]
-#emailpassword = os.getenv('LENSS_EMAIL_PASSWORD')
 
-#### Function Definitions
 
-def getSearchQuery(): 
-    """ This functions generates the filename to search for in the Google Drive
-        The filename is based on the date.
+# emailpassword = os.getenv('LENSS_EMAIL_PASSWORD')
+
+
+def get_search_query():
+    """This function generates the filename to search for in the Google Drive
+    The filename is based on the date.
     """
-    yesterday = datetime.now() - timedelta(1) #uses today's date and the equivalent to one day to find yesterday's date
-    time = yesterday.strftime('%Y-%m-%d_LENSSTSL') #assembles time into a string for search
-    return time #end result
+    # uses today's date and the equivalent to one day to find yesterday's date
+    yesterday = datetime.now() - timedelta(1)
+    # assembles time into a string for search
+    time = yesterday.strftime("%Y-%m-%d_LENSSTSL")
+    return time  # end result
 
-def getFileNames():
-    """ Looks for files uploaded in the last day on google drive.
-        The function returns a list of filenames.
+
+def get_file_names():
+    """Looks for files uploaded in the last day on google drive.
+    The function returns a list of filenames.
     """
-    #### Get Google Drive API Credentials
+    # Get Google Drive API Credentials
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -63,22 +76,29 @@ def getFileNames():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                credentialsfile, SCOPES)
+                credentialsfile, SCOPES
+            )
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open(tokenfile, 'w') as token:
+        with open(tokenfile, "w") as token:
             token.write(creds.to_json())
 
-    #### Get information from the API
-    service = build('drive', 'v3', credentials=creds)
+    # Get information from the API
+    service = build("drive", "v3", credentials=creds)
 
     # Call the Drive v3 API
     # searches API: search query input into q
-    results = service.files().list(q="name contains '{0}'".format(getSearchQuery()), 
-                                   spaces='drive', 
-                                   fields="nextPageToken, files(id, name)").execute()
+    results = (
+        service.files()
+        .list(
+            q="name contains '{0}'".format(get_search_query()),
+            spaces="drive",
+            fields="nextPageToken, files(id, name)",
+        )
+        .execute()
+    )
     # Get the list of files
-    items = results.get('files', [])
+    items = results.get("files", [])
 
     # Make response string
     if not items:
@@ -86,33 +106,40 @@ def getFileNames():
     else:
         outcome = ""
         for item in items:
-            outcome = outcome + str(item['name']) + "," # returns a list of all files found
+            # returns a list of all files found
+            outcome = outcome + str(item["name"]) + ","
 
     return outcome
 
-def sendStatus():
-    """ This function sends the mail with the daily status report
-    """
+
+def send_status():
+    """This function sends the mail with the daily status report"""
     # Define mail message
     message = """\
     Subject: Daily Status Report
 
+    # what will be sent out
     The following data files were added to the LENSS Drive today:
-    {0}""".format(getFileNames()) # what will be sent out
+    {0}""".format(
+        get_file_names()
+    )
 
-    Email_FilePathName = sys.argv[2] #reads 3rd argument to find file containing email and mailing list information
+    # reads 3rd argument to find file containing email and mailing list
+    # information
+    Email_FilePathName = sys.argv[2]
     readEmail = configparser.ConfigParser()
     readEmail.read(Email_FilePathName)
 
-    emailpassword = readEmail['login']['pw']
+    emailpassword = readEmail["login"]["pw"]
 
     # Define email credentials
     if emailpassword:
         password = emailpassword
     else:
-        password = getpass() #obscured input for password
-    sender = 'lenss@glaseducation.org'
-    receivers = ['joe@glaseducation.org', 'adam@glaseducation.org']
+        # obscured input for password
+        password = getpass()
+    sender = "lenss@glaseducation.org"
+    receivers = ["joe@glaseducation.org", "adam@glaseducation.org"]
 
     # Use the SMTP library to send the email
     smtp_server = smtplib.SMTP("smtp.gmail.com", 587)
@@ -125,6 +152,7 @@ def sendStatus():
         print(receivers[i])
         smtp_server.sendmail(sender, receivers[i], message)
     smtp_server.close()
- 
-if __name__ == '__main__':
-    sendStatus()
+
+
+if __name__ == "__main__":
+    send_status()
