@@ -11,14 +11,12 @@ save the data to disk.
 
 # Import required libraries/modules
 from datetime import datetime
-from datetime import date
 from datetime import time
 import platform
 import serial
 import serial.tools.list_ports
 import configparser
 import time
-import os
 import sys
 import logging
 from logging.handlers import TimedRotatingFileHandler

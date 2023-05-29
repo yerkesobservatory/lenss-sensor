@@ -12,7 +12,6 @@ import time
 from datetime import datetime
 import serial.tools.list_ports
 import configparser
-import os
 import sys
 import logging
 from logging.handlers import TimedRotatingFileHandler
