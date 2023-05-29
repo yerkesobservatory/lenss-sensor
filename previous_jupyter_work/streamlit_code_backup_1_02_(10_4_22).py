@@ -65,8 +65,8 @@ day_selection = st.date_input(
 morning_selection = day_selection + timedelta(days=1)
 
 # Prepares variable names, depending on selection, for later
-# Format of data varies with sensor number 
-# Because the sensor saves data on a per day basis, 
+# Format of data varies with sensor number
+# Because the sensor saves data on a per day basis,
 # two files need to be opened to gather data for one night
 # (evening data for the first and morning for the second).
 if sensor_selection == "Sensor 5":
@@ -157,7 +157,7 @@ Temperature = sensor["Temperature"].to_list()
 Temperature2 = sensor2["Temperature"].to_list()
 
 # Finds the last 0 in the first file (for the night)
-# Last 0 marks astronomical twilight 
+# Last 0 marks astronomical twilight
 # (last stage of dusk/beginning of night)
 last0 = len(Frequency) - 1
 while Frequency[last0] != 0:
@@ -171,34 +171,33 @@ if last0 > len(Frequency[: len(Frequency) - hours2]):
     while Frequency[last0] != 0:
         last0 = last0 - 1
 
-Frequency_Night = Frequency[last0 + 1:]
+Frequency_Night = Frequency[last0 + 1 :]
 
 # Finds the first 0 in the second file (for the morning)
 # First 0 in the mornining is the beginning of dawn
 first0 = 240
 while Frequency2[first0] != 0:
     first0 = first0 + 1
-Frequency_Morning = Frequency2[0: first0 - 1]
+Frequency_Morning = Frequency2[0 : first0 - 1]
 
 # These three lines limit the amount of downward/upward curve on the
 # night/day half of the graph. It does so by finding a mean, and working its
 # way forward/backward from there, eliminating any part that is above the mean.
 
 morning_mean = sum(Frequency_Morning[: len(Frequency_Morning) - 60]) / (
-        len(Frequency_Morning) - 60
+    len(Frequency_Morning) - 60
 )
 while sum(Frequency_Night[:5]) / 5 > morning_mean + 2:
     Frequency_Night = Frequency_Night[5:]
 while (
-        sum(Frequency_Morning[
-            len(Frequency_Morning) - 5:]) / 5 > morning_mean + 2
+    sum(Frequency_Morning[len(Frequency_Morning) - 5 :]) / 5 > morning_mean + 2
 ):
     Frequency_Morning = Frequency_Morning[: len(Frequency_Morning) - 5]
 
 # List of all the useful data for the night
 night = Frequency_Night + Frequency_Morning
 
-# ====== STREAMLIT SETTINGS ======== 
+# ====== STREAMLIT SETTINGS ========
 
 # Detects which sensor was selected, and then removes it from the list so
 # duplicates are not visible on the overlay
@@ -254,8 +253,8 @@ with st.expander("Advanced Options", expanded=False):
     st.caption("Warning: A Y-Axis below 10 is not recommended")
 
     # Finds the mean of the visible range
-custom_night_sum = sum(night[list(custom_x)[0]: list(custom_x)[1]])
-custom_length = len(night[list(custom_x)[0]: list(custom_x)[1]])
+custom_night_sum = sum(night[list(custom_x)[0] : list(custom_x)[1]])
+custom_length = len(night[list(custom_x)[0] : list(custom_x)[1]])
 mean = custom_night_sum / custom_length
 
 # Begins creating the graph
@@ -266,7 +265,7 @@ fig, ax = plt.subplots()
 if timestamps:
     plt.plot(
         [len(Frequency_Night), len(Frequency_Night)],
-        [-1, sum(Frequency_Night[len(Frequency_Night) - 2:]) / 2],
+        [-1, sum(Frequency_Night[len(Frequency_Night) - 2 :]) / 2],
         color=midnight_color,
         linestyle="solid",
         linewidth=2,
@@ -279,7 +278,7 @@ if timestamps:
         plottingloop_X = [PM_Plotting_Loop, PM_Plotting_Loop]
         plottingloop_Y = [
             -1,
-            sum(Frequency_Night[PM_Plotting_Loop: PM_Plotting_Loop + 1]),
+            sum(Frequency_Night[PM_Plotting_Loop : PM_Plotting_Loop + 1]),
         ]
         plt.plot(
             plottingloop_X,
@@ -295,7 +294,7 @@ if timestamps:
         plottingloop_X = [AM_Plotting_Loop, AM_Plotting_Loop]
         plottingloop_Y = [
             -1,
-            sum(night[AM_Plotting_Loop: AM_Plotting_Loop + 1]),
+            sum(night[AM_Plotting_Loop : AM_Plotting_Loop + 1]),
         ]
         plt.plot(
             plottingloop_X,
@@ -336,7 +335,7 @@ if hour_labels:
 # graph, can be buggy when the night is long
 if hour_labels:
     if list(custom_x)[0] < len(Frequency_Night) and list(custom_x)[1] > len(
-            Frequency_Night
+        Frequency_Night
     ):
         plt.text(len(Frequency_Night), hour_labels_y, "\ 12 AM")
 
@@ -394,9 +393,9 @@ if overlay_toggle == "Allow Overlay":
         addition1morning = pandas.read_csv(
             ".files/"
             + (
-                    str(morning_selection)
-                    + "_LENSSTSL00"
-                    + additional_sensor_number
+                str(morning_selection)
+                + "_LENSSTSL00"
+                + additional_sensor_number
             )
             + ".txt",
             names=["Time", "Voltage", "Frequency", "Temperature", "Sensors"],
@@ -457,35 +456,34 @@ if overlay_toggle == "Allow Overlay":
         while Frequency_Night_Overlay[Additional_last0] != 0:
             Additional_last0 = Additional_last0 - 1
         if Additional_last0 > len(
-                Frequency_Night_Overlay[: len(Frequency_Night_Overlay) - 120]
+            Frequency_Night_Overlay[: len(Frequency_Night_Overlay) - 120]
         ):
             Additional_last0 = len(Frequency_Night_Overlay) - 120
             while Frequency_Night_Overlay[Additional_last0] != 0:
                 Additional_last0 = Additional_last0 - 1
 
         Frequency_Night_Overlay = Frequency_Night_Overlay[
-                                  Additional_last0 + 1:
-                                  ]
+            Additional_last0 + 1 :
+        ]
         Additional_first0 = 240
         while Frequency_Morning_Overlay[Additional_first0] != 0:
             Additional_first0 = Additional_first0 + 1
         Frequency_Morning_Overlay = Frequency_Morning_Overlay[
-                                    0: Additional_first0 - 1
-                                    ]
+            0 : Additional_first0 - 1
+        ]
         Additional_morningmean = sum(Frequency_Morning_Overlay) / len(
             Frequency_Morning_Overlay
         )
         while sum(Frequency_Night_Overlay[:5]) / 5 > Additional_morningmean + 2:
             Frequency_Night_Overlay = Frequency_Night_Overlay[5:]
         while (
-                sum(Frequency_Morning_Overlay[
-                    len(Frequency_Morning_Overlay) - 5:])
-                / 5
-                > Additional_morningmean + 2
+            sum(Frequency_Morning_Overlay[len(Frequency_Morning_Overlay) - 5 :])
+            / 5
+            > Additional_morningmean + 2
         ):
             Frequency_Morning_Overlay = Frequency_Morning_Overlay[
-                                        : len(Frequency_Morning_Overlay) - 5
-                                        ]
+                : len(Frequency_Morning_Overlay) - 5
+            ]
         additional_night = Frequency_Night_Overlay + Frequency_Morning_Overlay
 
 # Adds the overlay plot to the graph, does this before the main line for the
@@ -585,8 +583,8 @@ if not meandisplay:
     st.success("Graph Created Successfully!")
 
 # Creates variable names for the temperature to be displayed later
-combined_temp = Temperature[last0:] + Temperature2[0: Frequency2.index(0) - 50]
-combined_temp = combined_temp[list(custom_x)[0]: list(custom_x)[1]]
+combined_temp = Temperature[last0:] + Temperature2[0 : Frequency2.index(0) - 50]
+combined_temp = combined_temp[list(custom_x)[0] : list(custom_x)[1]]
 temp_unit = "°C"
 # Converts Celsius to Fahrenheit if the user selected that
 if c_or_f == "Fahrenheit":
@@ -619,7 +617,7 @@ temperature_column3.metric(
 # Creates a variable name with the file name (was saved earlier) in order for
 # download by the viewer
 image_name = (
-        "Images/TSL " + filename[19:] + " Night of " + filename[0:10] + ".png"
+    "Images/TSL " + filename[19:] + " Night of " + filename[0:10] + ".png"
 )
 
 # Creates a download button to download the graph
@@ -631,7 +629,7 @@ with open(image_name, "rb") as file:
 with st.expander("View Raw Data"):
     st.subheader("Raw Data")
     combined_sensor = pandas.concat(
-        [sensor[last0 + 20:], sensor2[0: Frequency2.index(0) - 50]],
+        [sensor[last0 + 20 :], sensor2[0 : Frequency2.index(0) - 50]],
         ignore_index=True,
         sort=False,
     )
